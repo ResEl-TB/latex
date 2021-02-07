@@ -127,6 +127,8 @@
 \newcommand\ridatename{Date} % date
 \newcommand\riintrefname{Réf. interne} % internal reference
 \newcommand\riemailname{Contact} % contact e-mail
+\newcommand\riinvoice{Facture} % invoice label
+\newcommand\ritobepaid{À payer} % to-be-paid label
 %%%---
 
 \pagenumbering{gobble} % remove page numbering
@@ -165,7 +167,7 @@
 
 % Invoice label
 \begin{textblock*}{100mm}(\rimarginleftlabel, \rimargintoplabel)
-\fontfamily{ugq}\bfseries\slshape\huge Facture
+\fontfamily{ugq}\bfseries\slshape\huge\riinvoice
 \end{textblock*}
 
 % Barcode
@@ -276,9 +278,9 @@ BIC & \multicolumn{5}{c}{\texttt{\ribic}} \\
 % Display the payment options
 \newcommand{\unpaid}{%
 \par%
-\textbf{Payable}\\[-3mm]
+\textbf{\ritobepaid}\\[-3mm]
 \newlength{\paywidth}
-\setlength{\paywidth}{\widthof{\textbf{Payable}}}
+\setlength{\paywidth}{\widthof{\textbf{\ritobepaid}}}
 {\color{gray!60}\rule{\paywidth}{.4pt}}\\[-.4mm]
 \begin{tabularx}{\textwidth}{p{.5\paywidth}!{\hspace{-4.3mm}\color{gray!60}\vrule\hspace{1.5mm}}c}%
 &\\
