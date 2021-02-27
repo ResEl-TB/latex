@@ -12,6 +12,7 @@
 %
 %%%---
 
+
 %%% Prelude
 \NeedsTeXFormat{LaTeX2e}
 
@@ -21,29 +22,57 @@
 % Requirements
 \RequirePackage{xcolor} % for colors
 \RequirePackage{trimspaces} % for space manipulation
+\RequirePackage{tikz} % for iterations
+\RequirePackage[T1]{fontenc}
+\RequirePackage[french]{babel} % default language
 %%%---
+
 
 %%% Colors
 \definecolor{ResElTurquoise}{RGB}{36,182,209}
+\definecolor{ResElMarine}{RGB}{26,58,87}
+\definecolor{ResElBlue}{RGB}{34,83,120}
 %%%---
 
-%%% Macros
-% Make a rounded blue table
-\newsavebox{\bluetablebox}
-\newenvironment{bluetable}{%
-\begin{lrbox}{\bluetablebox}
-\setlength{\tabcolsep}{2mm}%
-\renewcommand{\arraystretch}{1.4}}{%
-\end{lrbox}
-\begin{tikzpicture}
-\node (table) [inner sep=0mm, below=1cm] {\usebox{\bluetablebox}};
-\draw [ResElTurquoise, line width=0.3mm, rounded corners=2mm] (table.north west) rectangle (table.south east);
-\end{tikzpicture}}
 
+%%% Arrays
+\def\appendto#1#2{\ifdefined#1\let\@tmparray#1\expandafter\def\expandafter#1\expandafter{\@tmparray, #2}\else\def#1{#2}\fi}
+
+
+%%% Design primitives
+% Rounded blue table
+\newsavebox{\@bluetable@box}
+\newenvironment{bluetable}{%
+  \begin{lrbox}{\@bluetable@box}
+    \setlength{\tabcolsep}{2mm}%
+    \renewcommand{\arraystretch}{1.4}
+}{%
+  \end{lrbox}
+  \begin{tikzpicture}
+    \node (table) [inner sep=0mm, below=1cm] {\usebox{\@bluetable@box}};
+    \draw [ResElTurquoise, line width=0.3mm, rounded corners=2mm] (table.north west) rectangle (table.south east);
+  \end{tikzpicture}
+}
+%%%---
+
+
+%%% Miscellaneous
 % Trim spaces
-\makeatletter
-\newcommand*{\trim}[1]{%
+\def\trim#1{%
   \trim@spaces@noexp{#1}%
 }
-\makeatother
+
+% Define object margins
+\def\put#1 at #2#3{%
+  \xdef\@cur@put{#1}
+  \expandafter\def\csname @rlay@#1@left\endcsname{#2}
+  \expandafter\def\csname @rlay@#1@top\endcsname{#3}
+}
+
+% Add object dimensions
+\def\withwidth#1{\expandafter\def\csname @rlay@\@cur@put @width\endcsname{#1}}
+\def\withheight#1{\expandafter\def\csname @rlay@\@cur@put @height\endcsname{#1}}
+
+% Apply a style on the first iteration of a loop
+\def\makefirst#1{\ifnum\i=1#1\else\sf\fi}
 %%%---

@@ -1,0 +1,202 @@
+%%% ResEl Layout package
+%
+% Copyright (c) 2019-2021 Benjamin Somers, All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+%
+%     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+%     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+%     Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+%%%---
+
+
+%%% Prelude
+\NeedsTeXFormat{LaTeX2e}
+
+% Define ResEl Layout package
+\ProvidesPackage{resellayout}[ResEl layout primitives]
+
+% Requirements
+\RequirePackage{etoolbox}
+\RequirePackage{geometry}                  % redefine margins
+\RequirePackage{ocr}                       % address font
+\RequirePackage[dvipsnames, table]{xcolor} % colors
+\RequirePackage{pst-barcode}               % side reference barcode
+\RequirePackage{resel}                     % primitives
+\RequirePackage[absolute]{textpos}         % floating textboxes
+\RequirePackage{twoopt}                    % 2-options macros
+%%%---
+
+
+%%% Texts
+% Use a sans serif font
+\renewcommand*{\familydefault}{\sfdefault}
+
+% Paragraph spacing redefinitions
+\setlength{\textwidth}{136mm}
+\setlength{\leftmargini}{6.5mm}
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{10mm}
+
+% Raw strings
+\def\@voc@sender          {Expéditeur}              % sender voc
+\def\@voc@senderaddress   {Adresse de l'expéditeur} % sender address voc
+\def\@voc@recipient       {Destinataire}            % recipient voc
+\def\@voc@recipientaddress{Adresse du destinataire} % recipient address voc
+
+% Labels
+\def\@propsty#1{\textcolor{Gray}{\scriptsize{#1}}} % labels font color and size
+\def\@valsty#1{\small{#1}}                         % values font size
+\def\@defval#1{\textcolor{Gray}{#1}}               % default value style
+%%%---
+
+
+%%% Margins
+\put {title} at {2cm}  {4cm}                                     % title position
+\put {ref}   at {15mm} {13mm}                                    % reference position
+\put {logo}  at {\@rlay@ref@left + 11cm} {1cm} \withheight{25mm} % logo dimensions
+
+\put {recipient} at {120mm} {41.5mm} % recipient position
+\put {sender}    at {37mm}  {50.8mm} % sender position
+\def\@rlay@sender@sep{5mm}           % sender separator margin
+
+\def\@rlay@letter@spacing{6cm} % Letter heading margin
+
+% Page dimensions
+\def\@rlay@page@left  {37mm} % page margin left
+\def\@rlay@page@bottom{20mm} % page margin bottom
+%%%---
+
+
+%%% Property management
+%% Fields — plain values associated to properties
+\newcommand\addfield[3][]{%
+  \expandafter\def\csname#2\endcsname##1{\expandafter\def\csname @val@#2\endcsname{##1}}%
+  \csname#2\endcsname{#1}%
+  \appendto#3{#2}%
+}
+
+%% Properties
+% Regular properties
+\newcommand{\addproperty}[4][]{%
+  \addfield[\@defval{#1}]{#2}{#4}%
+  \expandafter\def\csname @prop@#2\endcsname{#3}%
+}
+
+% Unbound properties — properties not bound to a container
+\newcommand{\addunboundproperty}[3][]{%
+  \addfield[\@defval{#1}]{#2}{\@unbound}%
+  \expandafter\def\csname @prop@#2\endcsname{#3}%
+}
+
+% Raw properties — properties without a default formatting
+\newcommand{\addrawproperty}[4][]{%
+  \addfield[#1]{#2}{#4}%
+  \expandafter\def\csname @prop@#2\endcsname{#3}%
+}
+
+% Dump fields with an optional index-aware formatting
+\newcommandtwoopt{\dumpfields}[3][][0pt]{%
+  \foreach\x [count=\i] in#3{\unless\ifnum\i=1\\[#2]\fi#1{\csname @val@\x\endcsname}}%
+}
+
+% Dump properties in a table
+\def\dumpproperties#1{%
+  \def\@tabledata{}
+  \foreach\x in#1{\protected@xappto\@tabledata{\@propsty{\csname @prop@\x\endcsname} & \@valsty{\csname @val@\x\endcsname}\\}}%
+  \begin{tabular}{r@{ }l}
+    \@tabledata
+  \end{tabular}%
+}
+%%%---
+
+
+%%% Graphical elements
+% Logo
+\def\resellogo#1#2#3{%
+  \begin{textblock*}{0pt}(#1, #2)%
+    \includegraphics[height=#3]{logo.eps}
+  \end{textblock*}%
+}
+
+% Barcode in the margin
+\newcommand{\gencode}[1]{%
+  \hbox{\hspace*{-33mm}\smash{\raisebox{35mm}{%
+     \psbarcode[rotate=270]{#1}{includecheck height=0.1}{code93}%
+  }}}%
+}
+%%%---
+
+
+%%% Layout builders
+%% Main layout
+\newcommand{\resellayout}[1][]{%
+  \AtBeginDocument{%
+    \geometry{left=\@rlay@page@left, bottom=\@rlay@page@bottom} % page margins
+
+    % Header horizontal rule
+    \begin{textblock*}{187mm}(10mm,\@rlay@title@top+4mm)
+      {\color{gray}\rule{\hsize}{0.25mm}}
+    \end{textblock*}
+
+    % Document title
+    \begin{textblock*}{100mm}(\@rlay@title@left, \@rlay@title@top)
+      \fontfamily{ugq}\bfseries\slshape\huge#1
+    \end{textblock*}
+
+    % Reference block
+    \begin{textblock*}{100mm}(\@rlay@ref@left, \@rlay@ref@top)
+      \dumpproperties\headerproperties
+    \end{textblock*}
+
+    % Barcode
+    \gencode\@val@intref
+
+    % Logo
+    \resellogo{\@rlay@logo@left}{\@rlay@logo@top}{\@rlay@logo@height}
+  }%
+}
+
+%% Letter elements
+\def\isaletter{%
+  % Sender left under reference
+  \addfield[\@voc@sender]       {sender}       \senderfields
+  \addfield[\@voc@senderaddress]{senderaddress}\senderfields
+
+  % Recipient right under logo
+  \addfield[\@voc@recipient]       {recipient}       \recipientfields
+  \addfield[\@voc@recipientaddress]{recipientaddress}\recipientfields
+
+  \AtBeginDocument{%
+    % Sender block
+    \begin{textblock*}{70mm}(\@rlay@sender@left, \@rlay@sender@top)
+      \dumpfields[\makefirst\bf][\@rlay@sender@sep]\senderfields
+    \end{textblock*}
+
+    %% Fold marks
+    % on half
+    \begin{textblock*}{4mm}(4mm,148.5mm)
+      \rule{\hsize}{0.1pt}
+    \end{textblock*}
+    % on one third
+    \begin{textblock*}{2mm}(4mm,99mm)
+      \rule{\hsize}{0.1pt}
+    \end{textblock*}
+    % on two thirds
+    \begin{textblock*}{2mm}(4mm,198mm)
+      \rule{\hsize}{0.1pt}
+    \end{textblock*}
+    %%--
+
+    % Recipient block
+    \begin{textblock*}{70mm}(\@rlay@recipient@left, \@rlay@recipient@top)
+      \begin{minipage}[c][40mm]{\textwidth}
+        \ocrfamily{\dumpfields[\MakeUppercase]\recipientfields}
+      \end{minipage}
+    \end{textblock*}
+    \vspace*{\@rlay@letter@spacing}
+  }
+}
