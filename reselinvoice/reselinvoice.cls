@@ -26,7 +26,6 @@
 \RequirePackage{calc}        % calculate lengths
 \RequirePackage{eurosym}     % euro symbol
 \RequirePackage{fp}          % floating point operations
-\RequirePackage{graphicx}    % figures
 \RequirePackage{multirow}    % multi-row cells
 \RequirePackage{numprint}    % decimal numbers printer
 \RequirePackage{tabularx}    % special tables
@@ -76,7 +75,6 @@
 
 %%% Layout
 \def\@rlay@letter@spacing{6.5cm}
-\pagenumbering{gobble} % remove page numbering
 \resellayout[\@ri@invoice]
 \isaletter
 %%%---

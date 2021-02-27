@@ -20,9 +20,13 @@
 \ProvidesPackage{resellayout}[ResEl layout primitives]
 
 % Requirements
+\RequirePackage{calc}                      % coordinate calculations
 \RequirePackage{etoolbox}
+\RequirePackage{fancyhdr}                  % page footers
 \RequirePackage{geometry}                  % redefine margins
+\RequirePackage{lastpage}                  % reference to last page
 \RequirePackage{ocr}                       % address font
+\RequirePackage{refcount}                  % get numbers from refs
 \RequirePackage[dvipsnames, table]{xcolor} % colors
 \RequirePackage{pst-barcode}               % side reference barcode
 \RequirePackage{resel}                     % primitives
@@ -55,7 +59,7 @@
 
 
 %%% Margins
-\put {title} at {2cm}  {4cm}                                     % title position
+\put {title} at {2cm}  {3.6cm}                                   % title position
 \put {ref}   at {15mm} {13mm}                                    % reference position
 \put {logo}  at {\@rlay@ref@left + 11cm} {1cm} \withheight{25mm} % logo dimensions
 
@@ -63,19 +67,24 @@
 \put {sender}    at {37mm}  {50.8mm} % sender position
 \def\@rlay@sender@sep{5mm}           % sender separator margin
 
-\def\@rlay@letter@spacing{6cm} % Letter heading margin
-
 % Page dimensions
 \def\@rlay@page@left  {37mm} % page margin left
 \def\@rlay@page@bottom{20mm} % page margin bottom
+
+\def\@rlay@letter@spacing{0cm} % letter content spacing
 %%%---
 
 
 %%% Property management
 %% Fields — plain values associated to properties
-\newcommand\addfield[3][]{%
+% Unbound fields — fields not bound to a container
+\newcommand\addunboundfield[2][]{%
   \expandafter\def\csname#2\endcsname##1{\expandafter\def\csname @val@#2\endcsname{##1}}%
   \csname#2\endcsname{#1}%
+}
+
+\newcommand\addfield[3][]{%
+  \addunboundfield[#1]{#2}%
   \appendto#3{#2}%
 }
 
@@ -88,7 +97,7 @@
 
 % Unbound properties — properties not bound to a container
 \newcommand{\addunboundproperty}[3][]{%
-  \addfield[\@defval{#1}]{#2}{\@unbound}%
+  \addunboundfield[\@defval{#1}]{#2}%
   \expandafter\def\csname @prop@#2\endcsname{#3}%
 }
 
@@ -118,7 +127,7 @@
 % Logo
 \def\resellogo#1#2#3{%
   \begin{textblock*}{0pt}(#1, #2)%
-    \includegraphics[height=#3]{logo.eps}
+    \noindent\includegraphics[height=#3]{logo.eps}
   \end{textblock*}%
 }
 
@@ -134,22 +143,28 @@
 %%% Layout builders
 %% Main layout
 \newcommand{\resellayout}[1][]{%
+  \geometry{left=\@rlay@page@left, bottom=\@rlay@page@bottom} % page margins
+  \pagestyle{fancy}                                           % fancy page style
+  \fancyhf{}                                                  % remove fancy elements
+  \renewcommand{\headrulewidth}{0pt}                          % remove fancy header line
+  \cfoot{\thepage~/~\pageref{LastPage}}                       % add page numbering
+
   \AtBeginDocument{%
-    \geometry{left=\@rlay@page@left, bottom=\@rlay@page@bottom} % page margins
+    \ifnum\getpagerefnumber{LastPage}=1\thispagestyle{empty}\fi % remove page numbering if single page
 
     % Header horizontal rule
-    \begin{textblock*}{187mm}(10mm,\@rlay@title@top+4mm)
-      {\color{gray}\rule{\hsize}{0.25mm}}
+    \begin{textblock*}{187mm}(10mm,\@rlay@title@top+7mm)
+      \noindent{\color{gray}\rule{\hsize}{0.25mm}}
     \end{textblock*}
 
     % Document title
     \begin{textblock*}{100mm}(\@rlay@title@left, \@rlay@title@top)
-      \fontfamily{ugq}\bfseries\slshape\huge#1
+      \noindent\fontfamily{ugq}\bfseries\slshape\huge#1
     \end{textblock*}
 
     % Reference block
     \begin{textblock*}{100mm}(\@rlay@ref@left, \@rlay@ref@top)
-      \dumpproperties\headerproperties
+      \noindent\dumpproperties\headerproperties
     \end{textblock*}
 
     % Barcode
@@ -171,32 +186,34 @@
   \addfield[\@voc@recipientaddress]{recipientaddress}\recipientfields
 
   \AtBeginDocument{%
+    \vspace*{\@rlay@letter@spacing}
+
     % Sender block
     \begin{textblock*}{70mm}(\@rlay@sender@left, \@rlay@sender@top)
-      \dumpfields[\makefirst\bf][\@rlay@sender@sep]\senderfields
+      \noindent\dumpfields[\makefirst\bf][\@rlay@sender@sep]\senderfields
     \end{textblock*}
 
     %% Fold marks
     % on half
     \begin{textblock*}{4mm}(4mm,148.5mm)
-      \rule{\hsize}{0.1pt}
+      \noindent\rule{\hsize}{0.1pt}
     \end{textblock*}
     % on one third
     \begin{textblock*}{2mm}(4mm,99mm)
-      \rule{\hsize}{0.1pt}
+      \noindent\rule{\hsize}{0.1pt}
     \end{textblock*}
     % on two thirds
     \begin{textblock*}{2mm}(4mm,198mm)
-      \rule{\hsize}{0.1pt}
+      \noindent\rule{\hsize}{0.1pt}
     \end{textblock*}
     %%--
 
     % Recipient block
     \begin{textblock*}{70mm}(\@rlay@recipient@left, \@rlay@recipient@top)
-      \begin{minipage}[c][40mm]{\textwidth}
+      \noindent\begin{minipage}[c][40mm]{\textwidth}
         \ocrfamily{\dumpfields[\MakeUppercase]\recipientfields}
       \end{minipage}
     \end{textblock*}
-    \vspace*{\@rlay@letter@spacing}
   }
 }
+%%%---
