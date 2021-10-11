@@ -1,0 +1,1028 @@
+%%% PCG package
+%
+% Copyright (c) 2021 Benjamin Somers, All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+%
+%     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+%     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+%     Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+%%%---
+
+%%% Prelude
+\NeedsTeXFormat{LaTeX2e}
+
+% Define PCG package
+\ProvidesPackage{pcg}[Plan comptable général]
+%%%---
+
+
+\expandafter\def\csname pcg1\endcsname{Comptes de capitaux}
+\expandafter\def\csname pcg10\endcsname{Capital et réserves}
+\expandafter\def\csname pcg101\endcsname{Capital}
+\expandafter\def\csname pcg1011\endcsname{Capital souscrit – non appelé}
+\expandafter\def\csname pcg1012\endcsname{Capital souscrit – appelé, non versé}
+\expandafter\def\csname pcg1013\endcsname{Capital souscrit – appelé, versé}
+\expandafter\def\csname pcg10131\endcsname{Capital non amorti}
+\expandafter\def\csname pcg10132\endcsname{Capital amorti}
+\expandafter\def\csname pcg1018\endcsname{Capital souscrit soumis à des réglementations particulières}
+\expandafter\def\csname pcg102\endcsname{Fonds fiduciaires}
+\expandafter\def\csname pcg104\endcsname{Primes liées au capital social}
+\expandafter\def\csname pcg1041\endcsname{Primes d’émission}
+\expandafter\def\csname pcg1042\endcsname{Primes de fusion}
+\expandafter\def\csname pcg1043\endcsname{Primes d’apport}
+\expandafter\def\csname pcg1044\endcsname{Primes de conversion d’obligations en actions}
+\expandafter\def\csname pcg1045\endcsname{Bons de souscription d’actions}
+\expandafter\def\csname pcg105\endcsname{Écarts de réévaluation}
+\expandafter\def\csname pcg1051\endcsname{Réserve spéciale de réévaluation}
+\expandafter\def\csname pcg1052\endcsname{Écart de réévaluation libre}
+\expandafter\def\csname pcg1053\endcsname{Réserve de réévaluation}
+\expandafter\def\csname pcg1055\endcsname{Écarts de réévaluation (autres opérations légales)}
+\expandafter\def\csname pcg1057\endcsname{Autres écarts de réévaluation en France}
+\expandafter\def\csname pcg1058\endcsname{Autres écarts de réévaluation à l’Étranger}
+\expandafter\def\csname pcg106\endcsname{Réserves}
+\expandafter\def\csname pcg1061\endcsname{Réserve légale}
+\expandafter\def\csname pcg10611\endcsname{Réserve légale proprement dite}
+\expandafter\def\csname pcg10612\endcsname{Plus-values nettes à long terme}
+\expandafter\def\csname pcg1062\endcsname{Réserves indisponibles}
+\expandafter\def\csname pcg1063\endcsname{Réserves statutaires ou contractuelles}
+\expandafter\def\csname pcg1064\endcsname{Réserves réglementées}
+\expandafter\def\csname pcg10641\endcsname{Plus-values nettes à long terme}
+\expandafter\def\csname pcg10643\endcsname{Réserves consécutives à l’octroi de subventions d’investissement}
+\expandafter\def\csname pcg10648\endcsname{Autres réserves réglementées}
+\expandafter\def\csname pcg1068\endcsname{Autres réserves}
+\expandafter\def\csname pcg10681\endcsname{Réserve de propre assureur}
+\expandafter\def\csname pcg10688\endcsname{Réserves diverses}
+\expandafter\def\csname pcg107\endcsname{Écart d’équivalence}
+\expandafter\def\csname pcg108\endcsname{Compte de l’exploitant}
+\expandafter\def\csname pcg109\endcsname{Actionnaires : Capital souscrit – non appelé}
+\expandafter\def\csname pcg11\endcsname{Report à nouveau (solde créditeur ou débiteur)}
+\expandafter\def\csname pcg110\endcsname{Report à nouveau (solde créditeur)}
+\expandafter\def\csname pcg119\endcsname{Report à nouveau (solde débiteur)}
+\expandafter\def\csname pcg12\endcsname{Résultat de l’exercice (bénéfice ou perte)}
+\expandafter\def\csname pcg120\endcsname{Résultat de l’exercice (bénéfice)}
+\expandafter\def\csname pcg129\endcsname{Résultat de l’exercice (perte)}
+\expandafter\def\csname pcg13\endcsname{Subventions d’investissement}
+\expandafter\def\csname pcg131\endcsname{Subventions d’équipement}
+\expandafter\def\csname pcg1311\endcsname{État}
+\expandafter\def\csname pcg1312\endcsname{Régions}
+\expandafter\def\csname pcg1313\endcsname{Départements}
+\expandafter\def\csname pcg1314\endcsname{Communes}
+\expandafter\def\csname pcg1315\endcsname{Collectivités publiques}
+\expandafter\def\csname pcg1316\endcsname{Entreprises publiques}
+\expandafter\def\csname pcg1317\endcsname{Entreprises et organismes privés}
+\expandafter\def\csname pcg1318\endcsname{Autres}
+\expandafter\def\csname pcg138\endcsname{Autres subventions d’investissement (même ventilation que celle du compte 131)}
+\expandafter\def\csname pcg139\endcsname{Subventions d’investissement inscrites au compte de résultat}
+\expandafter\def\csname pcg1391\endcsname{Subventions d’équipement}
+\expandafter\def\csname pcg13911\endcsname{État}
+\expandafter\def\csname pcg13912\endcsname{Régions}
+\expandafter\def\csname pcg13913\endcsname{Départements}
+\expandafter\def\csname pcg13914\endcsname{Communes}
+\expandafter\def\csname pcg13915\endcsname{Collectivités publiques}
+\expandafter\def\csname pcg13916\endcsname{Entreprises publiques}
+\expandafter\def\csname pcg13917\endcsname{Entreprises et organismes privés}
+\expandafter\def\csname pcg13918\endcsname{Autres}
+\expandafter\def\csname pcg1398\endcsname{Autres subventions d’investissement (même ventilation que celle du compte 1391)}
+\expandafter\def\csname pcg14\endcsname{Provisions réglementées}
+\expandafter\def\csname pcg142\endcsname{Provisions réglementées relatives aux immobilisations}
+\expandafter\def\csname pcg1423\endcsname{Provisions pour reconstitution des gisements miniers et pétroliers}
+\expandafter\def\csname pcg1424\endcsname{Provisions pour investissement (participation des salariés)}
+\expandafter\def\csname pcg143\endcsname{Provisions réglementées relatives aux stocks}
+\expandafter\def\csname pcg1431\endcsname{Hausse des prix}
+\expandafter\def\csname pcg1432\endcsname{Fluctuation des cours}
+\expandafter\def\csname pcg144\endcsname{Provisions réglementées relatives aux autres éléments de l’actif}
+\expandafter\def\csname pcg145\endcsname{Amortissements dérogatoires}
+\expandafter\def\csname pcg146\endcsname{Provision spéciale de réévaluation}
+\expandafter\def\csname pcg147\endcsname{Plus-values réinvesties}
+\expandafter\def\csname pcg148\endcsname{Autres provisions réglementées}
+\expandafter\def\csname pcg15\endcsname{Provisions}
+\expandafter\def\csname pcg151\endcsname{Provisions pour risques}
+\expandafter\def\csname pcg1511\endcsname{Provisions pour litiges}
+\expandafter\def\csname pcg1512\endcsname{Provisions pour garanties données aux clients}
+\expandafter\def\csname pcg1513\endcsname{Provisions pour pertes sur marchés à terme}
+\expandafter\def\csname pcg1514\endcsname{Provisions pour amendes et pénalités}
+\expandafter\def\csname pcg1515\endcsname{Provisions pour pertes de change}
+\expandafter\def\csname pcg1516\endcsname{Provisions pour pertes sur contrats}
+\expandafter\def\csname pcg1518\endcsname{Autres provisions pour risques}
+\expandafter\def\csname pcg153\endcsname{Provisions pour pensions et obligations similaires}
+\expandafter\def\csname pcg154\endcsname{Provisions pour restructurations}
+\expandafter\def\csname pcg155\endcsname{Provisions pour impôts}
+\expandafter\def\csname pcg156\endcsname{Provisions pour renouvellement des immobilisations (entreprises concessionnaires)}
+\expandafter\def\csname pcg157\endcsname{Provisions pour charges à répartir sur plusieurs exercices}
+\expandafter\def\csname pcg1572\endcsname{Provisions pour gros entretien ou grandes révisions}
+\expandafter\def\csname pcg158\endcsname{Autres provisions pour charges}
+\expandafter\def\csname pcg1581\endcsname{Provisions pour remises en état}
+\expandafter\def\csname pcg16\endcsname{Emprunts et dettes assimilées}
+\expandafter\def\csname pcg161\endcsname{Emprunts obligataires convertibles}
+\expandafter\def\csname pcg162\endcsname{Obligations représentatives de passifs nets remis en fiducie}
+\expandafter\def\csname pcg163\endcsname{Autres emprunts obligataires}
+\expandafter\def\csname pcg164\endcsname{Emprunts auprès des établissements de crédit}
+\expandafter\def\csname pcg165\endcsname{Dépôts et cautionnements reçus}
+\expandafter\def\csname pcg1651\endcsname{Dépôts}
+\expandafter\def\csname pcg1655\endcsname{Cautionnements}
+\expandafter\def\csname pcg166\endcsname{Participation des salariés aux résultats}
+\expandafter\def\csname pcg1661\endcsname{Comptes bloqués}
+\expandafter\def\csname pcg1662\endcsname{Fonds de participation}
+\expandafter\def\csname pcg167\endcsname{Emprunts et dettes assortis de conditions particulières}
+\expandafter\def\csname pcg1671\endcsname{Émissions de titres participatifs}
+\expandafter\def\csname pcg1674\endcsname{Avances conditionnées de l’État}
+\expandafter\def\csname pcg1675\endcsname{Emprunts participatifs}
+\expandafter\def\csname pcg168\endcsname{Autres emprunts et dettes assimilées}
+\expandafter\def\csname pcg1681\endcsname{Autres emprunts}
+\expandafter\def\csname pcg1685\endcsname{Rentes viagères capitalisées}
+\expandafter\def\csname pcg1687\endcsname{Autres dettes}
+\expandafter\def\csname pcg1688\endcsname{Intérêts courus}
+\expandafter\def\csname pcg16881\endcsname{sur emprunts obligataires convertibles}
+\expandafter\def\csname pcg16883\endcsname{sur autres emprunts obligataires}
+\expandafter\def\csname pcg16884\endcsname{sur emprunts auprès des établissements de crédit}
+\expandafter\def\csname pcg16885\endcsname{sur dépôts et cautionnements reçus}
+\expandafter\def\csname pcg16886\endcsname{sur participation des salariés aux résultats}
+\expandafter\def\csname pcg16887\endcsname{sur emprunts et dettes assortis de conditions particulières}
+\expandafter\def\csname pcg16888\endcsname{sur autres emprunts et dettes assimilées}
+\expandafter\def\csname pcg169\endcsname{Primes de remboursement des obligations}
+\expandafter\def\csname pcg17\endcsname{Dettes rattachées à des participations}
+\expandafter\def\csname pcg171\endcsname{Dettes rattachées à des participations (groupe)}
+\expandafter\def\csname pcg174\endcsname{Dettes rattachées à des participations (hors groupe)}
+\expandafter\def\csname pcg178\endcsname{Dettes rattachées à des sociétés en participation}
+\expandafter\def\csname pcg1781\endcsname{Principal}
+\expandafter\def\csname pcg1788\endcsname{Intérêts courus}
+\expandafter\def\csname pcg18\endcsname{Comptes de liaison des établissements et sociétés en participation}
+\expandafter\def\csname pcg181\endcsname{Comptes de liaison des établissements}
+\expandafter\def\csname pcg186\endcsname{Biens et prestations de services échangés entre établissements (charges)}
+\expandafter\def\csname pcg187\endcsname{Biens et prestations de services échangés entre établissements (produits)}
+\expandafter\def\csname pcg188\endcsname{Comptes de liaison des sociétés en participation}
+\expandafter\def\csname pcg2\endcsname{Comptes d’immobilisations}
+\expandafter\def\csname pcg20\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg201\endcsname{Frais d’établissement}
+\expandafter\def\csname pcg2011\endcsname{Frais de constitution}
+\expandafter\def\csname pcg2012\endcsname{Frais de premier établissement}
+\expandafter\def\csname pcg20121\endcsname{Frais de prospection}
+\expandafter\def\csname pcg20122\endcsname{Frais de publicité}
+\expandafter\def\csname pcg2013\endcsname{Frais d’augmentation de capital et d’opérations diverses (fusions, scissions, transformations)}
+\expandafter\def\csname pcg203\endcsname{Frais de recherche et de développement}
+\expandafter\def\csname pcg205\endcsname{Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires}
+\expandafter\def\csname pcg206\endcsname{Droit au bail}
+\expandafter\def\csname pcg207\endcsname{Fonds commercial}
+\expandafter\def\csname pcg208\endcsname{Autres immobilisations incorporelles}
+\expandafter\def\csname pcg2081\endcsname{Mali de fusion sur actifs incorporels}
+\expandafter\def\csname pcg21\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg211\endcsname{Terrains}
+\expandafter\def\csname pcg2111\endcsname{Terrains nus}
+\expandafter\def\csname pcg2112\endcsname{Terrains aménagés}
+\expandafter\def\csname pcg2113\endcsname{Sous-sols et sursols}
+\expandafter\def\csname pcg2114\endcsname{Terrains de carrières (Tréfonds)}
+\expandafter\def\csname pcg2115\endcsname{Terrains bâtis}
+\expandafter\def\csname pcg21151\endcsname{Ensembles immobiliers industriels (A, B)}
+\expandafter\def\csname pcg21155\endcsname{Ensembles immobiliers administratifs et commerciaux (A, B)}
+\expandafter\def\csname pcg21158\endcsname{Autres ensembles immobiliers}
+\expandafter\def\csname pcg211581\endcsname{affectés aux opérations professionnelles (A, B)}
+\expandafter\def\csname pcg211588\endcsname{affectés aux opérations non professionnelles (A, B)}
+\expandafter\def\csname pcg2116\endcsname{Compte d’ordre sur immobilisations}
+\expandafter\def\csname pcg212\endcsname{Agencements et aménagements de terrains (même ventilation que celle du compte 211)}
+\expandafter\def\csname pcg213\endcsname{Constructions}
+\expandafter\def\csname pcg2131\endcsname{Bâtiments}
+\expandafter\def\csname pcg21311\endcsname{Ensembles immobiliers industriels (A, B)}
+\expandafter\def\csname pcg21315\endcsname{Ensembles immobiliers administratifs et commerciaux (A, B)}
+\expandafter\def\csname pcg21318\endcsname{Autres ensembles immobiliers}
+\expandafter\def\csname pcg213181\endcsname{affectés aux opérations professionnelles (A, B)}
+\expandafter\def\csname pcg213188\endcsname{affectés aux opérations non professionnelles (A, B)}
+\expandafter\def\csname pcg2135\endcsname{Installations générales – agencements – aménagements des constructions}
+\expandafter\def\csname pcg21351\endcsname{Ensembles immobiliers industriels (A, B)}
+\expandafter\def\csname pcg21355\endcsname{Ensembles immobiliers administratifs et commerciaux (A, B)}
+\expandafter\def\csname pcg21358\endcsname{Autres ensembles immobiliers}
+\expandafter\def\csname pcg213581\endcsname{affectés aux opérations professionnelles (A, B)}
+\expandafter\def\csname pcg213588\endcsname{affectés aux opérations non professionnelles (A, B)}
+\expandafter\def\csname pcg2138\endcsname{Ouvrages d’infrastructure}
+\expandafter\def\csname pcg21381\endcsname{Voies de terre}
+\expandafter\def\csname pcg21382\endcsname{Voies de fer}
+\expandafter\def\csname pcg21383\endcsname{Voies d’eau}
+\expandafter\def\csname pcg21384\endcsname{Barrages}
+\expandafter\def\csname pcg21385\endcsname{Pistes d’aérodromes}
+\expandafter\def\csname pcg214\endcsname{Constructions sur sol d’autrui (même ventilation que celle du compte 213)}
+\expandafter\def\csname pcg215\endcsname{Installations techniques, matériels et outillage industriels}
+\expandafter\def\csname pcg2151\endcsname{Installations complexes spécialisées}
+\expandafter\def\csname pcg21511\endcsname{sur sol propre}
+\expandafter\def\csname pcg21514\endcsname{sur sol d’autrui}
+\expandafter\def\csname pcg2153\endcsname{Installations à caractère spécifique}
+\expandafter\def\csname pcg21531\endcsname{sur sol propre}
+\expandafter\def\csname pcg21534\endcsname{sur sol d’autrui}
+\expandafter\def\csname pcg2154\endcsname{Matériel industriel}
+\expandafter\def\csname pcg2155\endcsname{Outillage industriel}
+\expandafter\def\csname pcg2157\endcsname{Agencements et aménagements du matériel et outillage industriels}
+\expandafter\def\csname pcg218\endcsname{Autres immobilisations corporelles}
+\expandafter\def\csname pcg2181\endcsname{Installations générales, agencements, aménagements divers}
+\expandafter\def\csname pcg2182\endcsname{Matériel de transport}
+\expandafter\def\csname pcg2183\endcsname{Matériel de bureau et matériel informatique}
+\expandafter\def\csname pcg2184\endcsname{Mobilier}
+\expandafter\def\csname pcg2185\endcsname{Cheptel}
+\expandafter\def\csname pcg2186\endcsname{Emballages récupérables}
+\expandafter\def\csname pcg2187\endcsname{Mali de fusions sur actifs corporels}
+\expandafter\def\csname pcg22\endcsname{Immobilisations mises en concession}
+\expandafter\def\csname pcg23\endcsname{Immobilisations en cours}
+\expandafter\def\csname pcg231\endcsname{Immobilisations corporelles en cours}
+\expandafter\def\csname pcg2312\endcsname{Terrains}
+\expandafter\def\csname pcg2313\endcsname{Constructions}
+\expandafter\def\csname pcg2315\endcsname{Installations techniques, matériel et outillage industriels}
+\expandafter\def\csname pcg2318\endcsname{Autres immobilisations corporelles}
+\expandafter\def\csname pcg232\endcsname{Immobilisations incorporelles en cours}
+\expandafter\def\csname pcg237\endcsname{Avances et acomptes versés sur immobilisations incorporelles}
+\expandafter\def\csname pcg238\endcsname{Avances et acomptes versés sur commandes d’immobilisations corporelles}
+\expandafter\def\csname pcg2382\endcsname{Terrains}
+\expandafter\def\csname pcg2383\endcsname{Constructions}
+\expandafter\def\csname pcg2385\endcsname{Installations techniques, matériel et outillage industriels}
+\expandafter\def\csname pcg2388\endcsname{Autres immobilisations corporelles}
+\expandafter\def\csname pcg25\endcsname{Parts dans des entreprises liées et créances sur des entreprises liées}
+\expandafter\def\csname pcg26\endcsname{Participations et créances rattachées à des participations}
+\expandafter\def\csname pcg261\endcsname{Titres de participation}
+\expandafter\def\csname pcg2611\endcsname{Actions}
+\expandafter\def\csname pcg2618\endcsname{Autres titres}
+\expandafter\def\csname pcg266\endcsname{Autres formes de participation}
+\expandafter\def\csname pcg2661\endcsname{Droits représentatifs d’actifs nets remis en fiducie}
+\expandafter\def\csname pcg267\endcsname{Créances rattachées à des participations}
+\expandafter\def\csname pcg2671\endcsname{Créances rattachées à des participations (groupe)}
+\expandafter\def\csname pcg2674\endcsname{Créances rattachées à des participations (hors groupe)}
+\expandafter\def\csname pcg2675\endcsname{Versements représentatifs d’apports non capitalisés (appel de fonds)}
+\expandafter\def\csname pcg2676\endcsname{Avances consolidables}
+\expandafter\def\csname pcg2677\endcsname{Autres créances rattachées à des participations}
+\expandafter\def\csname pcg2678\endcsname{Intérêts courus}
+\expandafter\def\csname pcg268\endcsname{Créances rattachées à des sociétés en participation}
+\expandafter\def\csname pcg2681\endcsname{Principal}
+\expandafter\def\csname pcg2688\endcsname{Intérêts courus}
+\expandafter\def\csname pcg269\endcsname{Versements restant à effectuer sur titres de participation non libérés}
+\expandafter\def\csname pcg27\endcsname{Autres immobilisations financières}
+\expandafter\def\csname pcg271\endcsname{Titres immobilisés autres que les titres immobilisés de l’activité de portefeuille (droit de propriété)}
+\expandafter\def\csname pcg2711\endcsname{Actions}
+\expandafter\def\csname pcg2718\endcsname{Autres titres}
+\expandafter\def\csname pcg272\endcsname{Titres immobilisés (droit de créance)}
+\expandafter\def\csname pcg2721\endcsname{Obligations}
+\expandafter\def\csname pcg2722\endcsname{Bons}
+\expandafter\def\csname pcg273\endcsname{Titres immobilisés de l’activité de portefeuille}
+\expandafter\def\csname pcg274\endcsname{Prêts}
+\expandafter\def\csname pcg2741\endcsname{Prêts participatifs}
+\expandafter\def\csname pcg2742\endcsname{Prêts aux associés}
+\expandafter\def\csname pcg2743\endcsname{Prêts au personnel}
+\expandafter\def\csname pcg2748\endcsname{Autres prêts}
+\expandafter\def\csname pcg275\endcsname{Dépôts et cautionnements versés}
+\expandafter\def\csname pcg2751\endcsname{Dépôts}
+\expandafter\def\csname pcg2755\endcsname{Cautionnements}
+\expandafter\def\csname pcg276\endcsname{Autres créances immobilisées}
+\expandafter\def\csname pcg2761\endcsname{Créances diverses}
+\expandafter\def\csname pcg2768\endcsname{Intérêts courus}
+\expandafter\def\csname pcg27682\endcsname{sur titres immobilisés (droit de créance)}
+\expandafter\def\csname pcg27684\endcsname{sur prêts}
+\expandafter\def\csname pcg27685\endcsname{sur dépôts et cautionnements}
+\expandafter\def\csname pcg27688\endcsname{sur créances diverses}
+\expandafter\def\csname pcg277\endcsname{(Actions propres ou parts propres)}
+\expandafter\def\csname pcg2771\endcsname{Actions propres ou parts propres}
+\expandafter\def\csname pcg2772\endcsname{Actions propres ou parts propres en voie d’annulation}
+\expandafter\def\csname pcg278\endcsname{Mali de fusion sur actifs financiers}
+\expandafter\def\csname pcg279\endcsname{Versements restant à effectuer sur titres immobilisés non libérés}
+\expandafter\def\csname pcg28\endcsname{Amortissements des immobilisations}
+\expandafter\def\csname pcg280\endcsname{Amortissements des immobilisations incorporelles}
+\expandafter\def\csname pcg2801\endcsname{Frais d’établissement (même ventilation que celle du compte 201)}
+\expandafter\def\csname pcg2803\endcsname{Frais de recherche et de développement}
+\expandafter\def\csname pcg2805\endcsname{Concessions et droits similaires, brevets, licences, logiciels, droits et valeurs similaires}
+\expandafter\def\csname pcg2807\endcsname{Fonds commercial}
+\expandafter\def\csname pcg2808\endcsname{Autres immobilisations incorporelles}
+\expandafter\def\csname pcg28081\endcsname{Amortissements du mali de fusion sur actifs incorporels}
+\expandafter\def\csname pcg281\endcsname{Amortissements des immobilisations corporelles}
+\expandafter\def\csname pcg2812\endcsname{Agencements, aménagements de terrains (même ventilation que celle du compte 212)}
+\expandafter\def\csname pcg2813\endcsname{Constructions (même ventilation que celle du compte 213)}
+\expandafter\def\csname pcg2814\endcsname{Constructions sur sol d’autrui (même ventilation que celle du compte 214)}
+\expandafter\def\csname pcg2815\endcsname{Installations, matériel et outillage industriels (même ventilation que celle du compte 215)}
+\expandafter\def\csname pcg2818\endcsname{Autres immobilisations corporelles (même ventilation que celle du compte 218)}
+\expandafter\def\csname pcg28187\endcsname{Amortissement du mali de fusion sur actifs corporels}
+\expandafter\def\csname pcg282\endcsname{Amortissements des immobilisations mises en concession}
+\expandafter\def\csname pcg29\endcsname{Dépréciations des immobilisations}
+\expandafter\def\csname pcg290\endcsname{Dépréciations des immobilisations incorporelles}
+\expandafter\def\csname pcg2905\endcsname{Marques, procédés, droits et valeurs similaires}
+\expandafter\def\csname pcg2906\endcsname{Droit au bail}
+\expandafter\def\csname pcg2907\endcsname{Fonds commercial}
+\expandafter\def\csname pcg2908\endcsname{Autres immobilisations incorporelles}
+\expandafter\def\csname pcg29081\endcsname{Dépréciation du mali de fusion sur actifs incorporels}
+\expandafter\def\csname pcg291\endcsname{Dépréciations des immobilisations corporelles (même ventilation que celle du compte 21)}
+\expandafter\def\csname pcg29187\endcsname{Dépréciation du mali de fusion sur actifs corporels}
+\expandafter\def\csname pcg292\endcsname{Dépréciations des immobilisations mises en concession}
+\expandafter\def\csname pcg293\endcsname{Dépréciations des immobilisations en cours}
+\expandafter\def\csname pcg2931\endcsname{Immobilisations corporelles en cours}
+\expandafter\def\csname pcg2932\endcsname{Immobilisations incorporelles en cours}
+\expandafter\def\csname pcg296\endcsname{Dépréciations des participations et créances rattachées à des participations}
+\expandafter\def\csname pcg2961\endcsname{Titres de participation}
+\expandafter\def\csname pcg2966\endcsname{Autres formes de participation}
+\expandafter\def\csname pcg2967\endcsname{Créances rattachées à des participations (même ventilation que celle du compte 267)}
+\expandafter\def\csname pcg2968\endcsname{Créances rattachées à des sociétés en participation (même ventilation que celle du compte 268)}
+\expandafter\def\csname pcg297\endcsname{Dépréciations des autres immobilisations financières}
+\expandafter\def\csname pcg2971\endcsname{Titres immobilisés autres que les titres immobilisés de l’activité de portefeuille – droit de propriété (même ventilation que celle du compte 271)}
+\expandafter\def\csname pcg2972\endcsname{Droit de créance (même ventilation que celle du compte 272)}
+\expandafter\def\csname pcg2973\endcsname{Titres immobilisés de l’activité de portefeuille}
+\expandafter\def\csname pcg2974\endcsname{Prêts (même ventilation que celle du compte 274)}
+\expandafter\def\csname pcg2975\endcsname{Dépôts et cautionnements versés (même ventilation que celle du compte 275)}
+\expandafter\def\csname pcg2976\endcsname{Autres créances immobilisées (même ventilation que celle du compte 276)}
+\expandafter\def\csname pcg29787\endcsname{Dépréciation du mali de fusion sur actifs financiers}
+\expandafter\def\csname pcg3\endcsname{Comptes de stocks et en-cours}
+\expandafter\def\csname pcg31\endcsname{Matières premières (et fournitures)}
+\expandafter\def\csname pcg311\endcsname{Matières (ou groupe) A}
+\expandafter\def\csname pcg312\endcsname{Matières (ou groupe) B}
+\expandafter\def\csname pcg317\endcsname{Fournitures A, B, C,}
+\expandafter\def\csname pcg32\endcsname{Autres approvisionnements}
+\expandafter\def\csname pcg321\endcsname{Matières consommables}
+\expandafter\def\csname pcg3211\endcsname{Matières (ou groupe) C}
+\expandafter\def\csname pcg3212\endcsname{Matières (ou groupe) D}
+\expandafter\def\csname pcg322\endcsname{Fournitures consommables}
+\expandafter\def\csname pcg3221\endcsname{Combustibles}
+\expandafter\def\csname pcg3222\endcsname{Produits d’entretien}
+\expandafter\def\csname pcg3223\endcsname{Fournitures d’atelier et d’usine}
+\expandafter\def\csname pcg3224\endcsname{Fournitures de magasin}
+\expandafter\def\csname pcg3225\endcsname{Fournitures de bureau}
+\expandafter\def\csname pcg326\endcsname{Emballages}
+\expandafter\def\csname pcg3261\endcsname{Emballages perdus}
+\expandafter\def\csname pcg3265\endcsname{Emballages récupérables non identifiables}
+\expandafter\def\csname pcg3267\endcsname{Emballages à usage mixte}
+\expandafter\def\csname pcg33\endcsname{En-cours de production de biens}
+\expandafter\def\csname pcg331\endcsname{Produits en cours}
+\expandafter\def\csname pcg3311\endcsname{Produits en cours P 1}
+\expandafter\def\csname pcg3312\endcsname{Produits en cours P 2}
+\expandafter\def\csname pcg335\endcsname{Travaux en cours}
+\expandafter\def\csname pcg3351\endcsname{Travaux en cours T 1}
+\expandafter\def\csname pcg3352\endcsname{Travaux en cours T 2}
+\expandafter\def\csname pcg34\endcsname{En-cours de production de services}
+\expandafter\def\csname pcg341\endcsname{Études en cours}
+\expandafter\def\csname pcg3411\endcsname{Études en cours E 1}
+\expandafter\def\csname pcg3412\endcsname{Études en cours E 2}
+\expandafter\def\csname pcg345\endcsname{Prestations de services en cours}
+\expandafter\def\csname pcg3451\endcsname{Prestations de services S 1}
+\expandafter\def\csname pcg3452\endcsname{Prestations de services S 2}
+\expandafter\def\csname pcg35\endcsname{Stocks de produits}
+\expandafter\def\csname pcg351\endcsname{Produits intermédiaires}
+\expandafter\def\csname pcg3511\endcsname{Produits intermédiaires (ou groupe) A}
+\expandafter\def\csname pcg3512\endcsname{Produits intermédiaires (ou groupe) B}
+\expandafter\def\csname pcg355\endcsname{Produits finis}
+\expandafter\def\csname pcg3551\endcsname{Produits finis (ou groupe) A}
+\expandafter\def\csname pcg3552\endcsname{Produits finis (ou groupe) B}
+\expandafter\def\csname pcg358\endcsname{Produits résiduels (ou matières de récupération)}
+\expandafter\def\csname pcg3581\endcsname{Déchets}
+\expandafter\def\csname pcg3585\endcsname{Rebuts}
+\expandafter\def\csname pcg3586\endcsname{Matières de récupération}
+\expandafter\def\csname pcg36\endcsname{(compte à ouvrir, le cas échéant, sous l’intitulé "Stocks provenant d’immobilisations")}
+\expandafter\def\csname pcg37\endcsname{Stocks de marchandises}
+\expandafter\def\csname pcg371\endcsname{Marchandises (ou groupe) A}
+\expandafter\def\csname pcg372\endcsname{Marchandises (ou groupe) B}
+\expandafter\def\csname pcg38\endcsname{(lorsque l’entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d’acheminement, mis en dépôt ou donnés en consignation)}
+\expandafter\def\csname pcg39\endcsname{Dépréciations des stocks et en-cours}
+\expandafter\def\csname pcg391\endcsname{Dépréciations des matières premières (et fournitures)}
+\expandafter\def\csname pcg3911\endcsname{Matières (ou groupe) A}
+\expandafter\def\csname pcg3912\endcsname{Matières (ou groupe) B}
+\expandafter\def\csname pcg3917\endcsname{Fournitures A, B, C,}
+\expandafter\def\csname pcg392\endcsname{Dépréciations des autres approvisionnements}
+\expandafter\def\csname pcg3921\endcsname{Matières consommables (même ventilation que celle du compte 321)}
+\expandafter\def\csname pcg3922\endcsname{Fournitures consommables (même ventilation que celle du compte 322)}
+\expandafter\def\csname pcg3926\endcsname{Emballages (même ventilation que celle du compte 326)}
+\expandafter\def\csname pcg393\endcsname{Dépréciations des en-cours de production de biens}
+\expandafter\def\csname pcg3931\endcsname{Produits en cours (même ventilation que celle du compte 331)}
+\expandafter\def\csname pcg3935\endcsname{Travaux en cours (même ventilation que celle du compte 335)}
+\expandafter\def\csname pcg394\endcsname{Dépréciations des en-cours de production de services}
+\expandafter\def\csname pcg3941\endcsname{Études en cours (même ventilation que celle du compte 341)}
+\expandafter\def\csname pcg3945\endcsname{Prestations de services en cours (même ventilation que celle du compte 345)}
+\expandafter\def\csname pcg395\endcsname{Dépréciations des stocks de produits}
+\expandafter\def\csname pcg3951\endcsname{Produits intermédiaires (même ventilation que celle du compte 351)}
+\expandafter\def\csname pcg3955\endcsname{Produits finis (même ventilation que celle du compte 355)}
+\expandafter\def\csname pcg397\endcsname{Dépréciations des stocks de marchandises}
+\expandafter\def\csname pcg3971\endcsname{Marchandise (ou groupe) A}
+\expandafter\def\csname pcg3972\endcsname{Marchandise (ou groupe) B}
+\expandafter\def\csname pcg4\endcsname{Comptes de tiers}
+\expandafter\def\csname pcg40\endcsname{Fournisseurs et comptes rattachés}
+\expandafter\def\csname pcg400\endcsname{Fournisseurs et comptes rattachés}
+\expandafter\def\csname pcg401\endcsname{Fournisseurs}
+\expandafter\def\csname pcg4011\endcsname{Fournisseurs – Achats de biens et prestations de services}
+\expandafter\def\csname pcg4017\endcsname{Fournisseurs – Retenues de garantie}
+\expandafter\def\csname pcg403\endcsname{Fournisseurs – Effets à payer}
+\expandafter\def\csname pcg404\endcsname{Fournisseurs d’immobilisations}
+\expandafter\def\csname pcg4041\endcsname{Fournisseurs – Achats d’immobilisations}
+\expandafter\def\csname pcg4047\endcsname{Fournisseurs d’immobilisations – Retenues de garantie}
+\expandafter\def\csname pcg405\endcsname{Fournisseurs d’immobilisations – Effets à payer}
+\expandafter\def\csname pcg408\endcsname{Fournisseurs – Factures non parvenues}
+\expandafter\def\csname pcg4081\endcsname{Fournisseurs}
+\expandafter\def\csname pcg4084\endcsname{Fournisseurs d’immobilisations}
+\expandafter\def\csname pcg4088\endcsname{Fournisseurs – Intérêts courus}
+\expandafter\def\csname pcg409\endcsname{Fournisseurs débiteurs}
+\expandafter\def\csname pcg4091\endcsname{Fournisseurs – Avances et acomptes versés sur commandes}
+\expandafter\def\csname pcg4096\endcsname{Fournisseurs – Créances pour emballages et matériel à rendre}
+\expandafter\def\csname pcg4097\endcsname{Fournisseurs – Autres avoirs}
+\expandafter\def\csname pcg40971\endcsname{Fournisseurs d’exploitation}
+\expandafter\def\csname pcg40974\endcsname{Fournisseurs d’immobilisations}
+\expandafter\def\csname pcg4098\endcsname{Rabais, remises, ristournes à obtenir et autres avoirs non encore reçus}
+\expandafter\def\csname pcg41\endcsname{Clients et comptes rattachés}
+\expandafter\def\csname pcg410\endcsname{Clients et comptes rattachés}
+\expandafter\def\csname pcg411\endcsname{Clients}
+\expandafter\def\csname pcg4111\endcsname{Clients – Ventes de biens ou de prestations de services}
+\expandafter\def\csname pcg4117\endcsname{Clients – Retenues de garantie}
+\expandafter\def\csname pcg413\endcsname{Clients – Effets à recevoir}
+\expandafter\def\csname pcg416\endcsname{Clients douteux ou litigieux}
+\expandafter\def\csname pcg418\endcsname{Clients – Produits non encore facturés}
+\expandafter\def\csname pcg4181\endcsname{Clients – Factures à établir}
+\expandafter\def\csname pcg4188\endcsname{Clients – Intérêts courus}
+\expandafter\def\csname pcg419\endcsname{Clients créditeurs}
+\expandafter\def\csname pcg4191\endcsname{Clients – Avances et acomptes reçus sur commandes}
+\expandafter\def\csname pcg4196\endcsname{Clients – Dettes sur emballages et matériels consignés}
+\expandafter\def\csname pcg4197\endcsname{Clients – Autres avoirs}
+\expandafter\def\csname pcg4198\endcsname{Rabais, remises, ristournes à accorder et autres avoirs à établir}
+\expandafter\def\csname pcg42\endcsname{Personnel et comptes rattachés}
+\expandafter\def\csname pcg421\endcsname{Personnel – Rémunérations dues}
+\expandafter\def\csname pcg422\endcsname{Comités d’entreprises, d’établissement, …}
+\expandafter\def\csname pcg424\endcsname{Participation des salariés aux résultats}
+\expandafter\def\csname pcg4246\endcsname{Réserve spéciale}
+\expandafter\def\csname pcg4248\endcsname{Comptes courants}
+\expandafter\def\csname pcg425\endcsname{Personnel – Avances et acomptes}
+\expandafter\def\csname pcg426\endcsname{Personnel – Dépôts}
+\expandafter\def\csname pcg427\endcsname{Personnel – Oppositions}
+\expandafter\def\csname pcg428\endcsname{Personnel – Charges à payer et produits à recevoir}
+\expandafter\def\csname pcg4282\endcsname{Dettes provisionnées pour congés à payer}
+\expandafter\def\csname pcg4284\endcsname{Dettes provisionnées pour participation des salariés aux résultats}
+\expandafter\def\csname pcg4286\endcsname{Autres charges à payer}
+\expandafter\def\csname pcg4287\endcsname{Produits à recevoir}
+\expandafter\def\csname pcg43\endcsname{Sécurité sociale et autres organismes sociaux}
+\expandafter\def\csname pcg431\endcsname{Sécurité sociale}
+\expandafter\def\csname pcg437\endcsname{Autres organismes sociaux}
+\expandafter\def\csname pcg438\endcsname{Organismes sociaux – Charges à payer et produits à recevoir}
+\expandafter\def\csname pcg4382\endcsname{Charges sociales sur congés à payer}
+\expandafter\def\csname pcg4386\endcsname{Autres charges à payer}
+\expandafter\def\csname pcg4387\endcsname{Produits à recevoir}
+\expandafter\def\csname pcg44\endcsname{État et autres collectivités publiques}
+\expandafter\def\csname pcg441\endcsname{État – Subventions à recevoir}
+\expandafter\def\csname pcg4411\endcsname{Subventions d’investissement}
+\expandafter\def\csname pcg4417\endcsname{Subventions d’exploitation}
+\expandafter\def\csname pcg4418\endcsname{Subventions d’équilibre}
+\expandafter\def\csname pcg4419\endcsname{Avances sur subventions}
+\expandafter\def\csname pcg442\endcsname{État – Impôts et taxes recouvrables sur des tiers}
+\expandafter\def\csname pcg4424\endcsname{Obligataires}
+\expandafter\def\csname pcg4425\endcsname{Associés}
+\expandafter\def\csname pcg443\endcsname{Opérations particulières avec l’État les collectivités publiques, les organismes internationaux}
+\expandafter\def\csname pcg4431\endcsname{Créances sur l’État résultant de la suppression de la règle du décalage d’un mois en matière de TVA}
+\expandafter\def\csname pcg4438\endcsname{Intérêts courus sur créances figurant au 4431}
+\expandafter\def\csname pcg444\endcsname{État – Impôts sur les bénéfices}
+\expandafter\def\csname pcg445\endcsname{État – Taxes sur le chiffre d’affaires}
+\expandafter\def\csname pcg4452\endcsname{TVA due intracommunautaire}
+\expandafter\def\csname pcg4455\endcsname{Taxes sur le chiffre d’affaires à décaisser}
+\expandafter\def\csname pcg44551\endcsname{TVA à décaisser}
+\expandafter\def\csname pcg44558\endcsname{Taxes assimilées à la TVA}
+\expandafter\def\csname pcg4456\endcsname{Taxes sur le chiffre d’affaires déductibles}
+\expandafter\def\csname pcg44562\endcsname{TVA sur immobilisations}
+\expandafter\def\csname pcg44563\endcsname{TVA transférée par d’autres entreprises}
+\expandafter\def\csname pcg44566\endcsname{TVA sur autres biens et services}
+\expandafter\def\csname pcg44567\endcsname{Crédit de TVA à reporter}
+\expandafter\def\csname pcg44568\endcsname{Taxes assimilées à la TVA}
+\expandafter\def\csname pcg4457\endcsname{Taxes sur le chiffre d’affaires collectées par l’entreprise}
+\expandafter\def\csname pcg44571\endcsname{TVA collectée}
+\expandafter\def\csname pcg44578\endcsname{Taxes assimilées à la TVA}
+\expandafter\def\csname pcg4458\endcsname{Taxes sur le chiffre d’affaires à régulariser ou en attente}
+\expandafter\def\csname pcg44581\endcsname{Acomptes – Régime simplifié d’imposition}
+\expandafter\def\csname pcg44582\endcsname{Acomptes – Régime de forfait}
+\expandafter\def\csname pcg44583\endcsname{Remboursement de taxes sur le chiffre d’affaires demandé}
+\expandafter\def\csname pcg44584\endcsname{TVA récupérée d’avance}
+\expandafter\def\csname pcg44586\endcsname{Taxes sur le chiffre d’affaires sur factures non parvenues}
+\expandafter\def\csname pcg44587\endcsname{Taxes sur le chiffre d’affaires sur factures à établir}
+\expandafter\def\csname pcg446\endcsname{Obligations cautionnées}
+\expandafter\def\csname pcg447\endcsname{Autres impôts, taxes et versements assimilés}
+\expandafter\def\csname pcg448\endcsname{État – Charges à payer et produits à recevoir}
+\expandafter\def\csname pcg4482\endcsname{Charges fiscales sur congés à payer}
+\expandafter\def\csname pcg4486\endcsname{Charges à payer}
+\expandafter\def\csname pcg4487\endcsname{Produits à recevoir}
+\expandafter\def\csname pcg449\endcsname{Quotas d’émission à acquérir}
+\expandafter\def\csname pcg45\endcsname{Groupe et associés}
+\expandafter\def\csname pcg451\endcsname{Groupe}
+\expandafter\def\csname pcg455\endcsname{Associés – Comptes courants}
+\expandafter\def\csname pcg4551\endcsname{Principal}
+\expandafter\def\csname pcg4558\endcsname{Intérêts courus}
+\expandafter\def\csname pcg456\endcsname{Associés – Opérations sur le capital}
+\expandafter\def\csname pcg4561\endcsname{Associés – Comptes d’apport en société}
+\expandafter\def\csname pcg45611\endcsname{Apports en nature}
+\expandafter\def\csname pcg45615\endcsname{Apports en numéraire}
+\expandafter\def\csname pcg4562\endcsname{Apporteurs – Capital appelé, non versé}
+\expandafter\def\csname pcg45621\endcsname{Actionnaires – Capital souscrit et appelé, non versé}
+\expandafter\def\csname pcg45625\endcsname{Associés – Capital appelé, non versé}
+\expandafter\def\csname pcg4563\endcsname{Associés – Versements reçus sur augmentation de capital}
+\expandafter\def\csname pcg4564\endcsname{Associés – Versements anticipés}
+\expandafter\def\csname pcg4566\endcsname{Actionnaires défaillants}
+\expandafter\def\csname pcg4567\endcsname{Associés – Capital à rembourser}
+\expandafter\def\csname pcg457\endcsname{Associés – Dividendes à payer}
+\expandafter\def\csname pcg458\endcsname{Associés – Opérations faites en commun et en GIE}
+\expandafter\def\csname pcg4581\endcsname{Opérations courantes}
+\expandafter\def\csname pcg4588\endcsname{Intérêts courus}
+\expandafter\def\csname pcg46\endcsname{Débiteurs divers et créditeurs divers}
+\expandafter\def\csname pcg462\endcsname{Créances sur cessions d’immobilisations}
+\expandafter\def\csname pcg464\endcsname{Dettes sur acquisitions de valeurs mobilières de placement}
+\expandafter\def\csname pcg465\endcsname{Créances sur cessions de valeurs mobilières de placement}
+\expandafter\def\csname pcg467\endcsname{Autres comptes débiteurs ou créditeurs}
+\expandafter\def\csname pcg468\endcsname{Divers – Charges à payer et produits à recevoir}
+\expandafter\def\csname pcg4686\endcsname{Charges à payer}
+\expandafter\def\csname pcg4687\endcsname{Produits à recevoir}
+\expandafter\def\csname pcg47\endcsname{Comptes transitoires ou d’attente}
+\expandafter\def\csname pcg471\endcsname{Comptes d’attente}
+\expandafter\def\csname pcg472\endcsname{Comptes d’attente}
+\expandafter\def\csname pcg473\endcsname{Comptes d’attente}
+\expandafter\def\csname pcg474\endcsname{Comptes d’attente}
+\expandafter\def\csname pcg475\endcsname{Comptes d’attente}
+\expandafter\def\csname pcg476\endcsname{Différence de conversion – Actif}
+\expandafter\def\csname pcg4761\endcsname{Diminution des créances}
+\expandafter\def\csname pcg4762\endcsname{Augmentation des dettes}
+\expandafter\def\csname pcg4768\endcsname{Différences compensées par couverture de change}
+\expandafter\def\csname pcg477\endcsname{Différences de conversion – Passif}
+\expandafter\def\csname pcg4771\endcsname{Augmentation des créances}
+\expandafter\def\csname pcg4772\endcsname{Diminution des dettes}
+\expandafter\def\csname pcg4778\endcsname{Différences compensées par couverture de change}
+\expandafter\def\csname pcg478\endcsname{Autres comptes transitoires}
+\expandafter\def\csname pcg4786\endcsname{Différences d’évaluation sur instruments de trésorerie – ACTIF}
+\expandafter\def\csname pcg4787\endcsname{Différences d’évaluation sur instruments de trésorerie – PASSIF}
+\expandafter\def\csname pcg48\endcsname{Comptes de régularisation}
+\expandafter\def\csname pcg481\endcsname{Charges à répartir sur plusieurs exercices}
+\expandafter\def\csname pcg4816\endcsname{Frais d’émission des emprunts}
+\expandafter\def\csname pcg486\endcsname{Charges constatées d’avance}
+\expandafter\def\csname pcg487\endcsname{Produits constatés d’avance}
+\expandafter\def\csname pcg488\endcsname{Comptes de répartition périodique des charges et des produits}
+\expandafter\def\csname pcg4886\endcsname{Charges}
+\expandafter\def\csname pcg4887\endcsname{Produits}
+\expandafter\def\csname pcg49\endcsname{Dépréciations des comptes de tiers}
+\expandafter\def\csname pcg491\endcsname{Dépréciations des comptes de clients}
+\expandafter\def\csname pcg495\endcsname{Dépréciations des comptes du groupe et des associés}
+\expandafter\def\csname pcg4951\endcsname{Comptes du groupe}
+\expandafter\def\csname pcg4955\endcsname{Comptes courants des associés}
+\expandafter\def\csname pcg4958\endcsname{Opérations faites en commun et en GIE}
+\expandafter\def\csname pcg496\endcsname{Dépréciations des comptes de débiteurs divers}
+\expandafter\def\csname pcg4962\endcsname{Créances sur cessions d’immobilisations}
+\expandafter\def\csname pcg4965\endcsname{Créances sur cessions de valeurs mobilières de placement}
+\expandafter\def\csname pcg4967\endcsname{Autres comptes débiteurs}
+\expandafter\def\csname pcg5\endcsname{Comptes financiers}
+\expandafter\def\csname pcg50\endcsname{Valeurs mobilières de placement}
+\expandafter\def\csname pcg501\endcsname{Parts dans des entreprises liées}
+\expandafter\def\csname pcg502\endcsname{Actions propres}
+\expandafter\def\csname pcg5021\endcsname{Actions destinées à être attribuées aux employés et affectées à des plans déterminés}
+\expandafter\def\csname pcg5022\endcsname{Actions disponibles pour être attribuées aux employés ou pour la régularisation des cours de bourse}
+\expandafter\def\csname pcg503\endcsname{Actions}
+\expandafter\def\csname pcg5031\endcsname{Titres cotés}
+\expandafter\def\csname pcg5035\endcsname{Titres non cotés}
+\expandafter\def\csname pcg504\endcsname{Autres titres conférant un droit de propriété}
+\expandafter\def\csname pcg505\endcsname{Obligations et bons émis par la société et rachetés par elle}
+\expandafter\def\csname pcg506\endcsname{Obligations}
+\expandafter\def\csname pcg5061\endcsname{Titres cotés}
+\expandafter\def\csname pcg5065\endcsname{Titres non cotés}
+\expandafter\def\csname pcg507\endcsname{Bons du Trésor et bons de caisse à court terme}
+\expandafter\def\csname pcg508\endcsname{Autres valeurs mobilières de placement et autres créances assimilées}
+\expandafter\def\csname pcg5081\endcsname{Autres valeurs mobilières}
+\expandafter\def\csname pcg5082\endcsname{Bons de souscription}
+\expandafter\def\csname pcg5088\endcsname{Intérêts courus sur obligations, bons et valeurs assimilés}
+\expandafter\def\csname pcg509\endcsname{Versements restant à effectuer sur valeurs mobilières de placement non libérées}
+\expandafter\def\csname pcg51\endcsname{Banques, établissements financiers et assimilés}
+\expandafter\def\csname pcg511\endcsname{Valeurs à l’encaissement}
+\expandafter\def\csname pcg5111\endcsname{Coupons échus à l’encaissement}
+\expandafter\def\csname pcg5112\endcsname{Chèques à encaisser}
+\expandafter\def\csname pcg5113\endcsname{Effets à l’encaissement}
+\expandafter\def\csname pcg5114\endcsname{Effets à l’escompte}
+\expandafter\def\csname pcg512\endcsname{Banques}
+\expandafter\def\csname pcg5121\endcsname{Comptes en monnaie nationale}
+\expandafter\def\csname pcg5124\endcsname{Comptes en devises}
+\expandafter\def\csname pcg514\endcsname{Chèques postaux}
+\expandafter\def\csname pcg515\endcsname{" Caisses " du Trésor et des établissements publics}
+\expandafter\def\csname pcg516\endcsname{Sociétés de bourse}
+\expandafter\def\csname pcg517\endcsname{Autres organismes financiers}
+\expandafter\def\csname pcg518\endcsname{Intérêts courus}
+\expandafter\def\csname pcg5181\endcsname{Intérêts courus à payer}
+\expandafter\def\csname pcg5188\endcsname{Intérêts courus à recevoir}
+\expandafter\def\csname pcg519\endcsname{Concours bancaires courants}
+\expandafter\def\csname pcg5191\endcsname{Crédit de mobilisation de créances commerciales}
+\expandafter\def\csname pcg5193\endcsname{Mobilisation de créances nées à l’étranger}
+\expandafter\def\csname pcg5198\endcsname{Intérêts courus sur concours bancaires courants}
+\expandafter\def\csname pcg52\endcsname{Instruments de trésorerie}
+\expandafter\def\csname pcg53\endcsname{Caisse}
+\expandafter\def\csname pcg531\endcsname{Caisse siège social}
+\expandafter\def\csname pcg5311\endcsname{Caisse en monnaie nationale}
+\expandafter\def\csname pcg5314\endcsname{Caisse en devises}
+\expandafter\def\csname pcg532\endcsname{Caisse succursale (ou usine) A}
+\expandafter\def\csname pcg533\endcsname{Caisse succursale (ou usine) B}
+\expandafter\def\csname pcg54\endcsname{Régies d’avance et accréditifs}
+\expandafter\def\csname pcg58\endcsname{Virements internes}
+\expandafter\def\csname pcg59\endcsname{Dépréciations des comptes financiers}
+\expandafter\def\csname pcg590\endcsname{Dépréciations des valeurs mobilières de placement}
+\expandafter\def\csname pcg5903\endcsname{Actions}
+\expandafter\def\csname pcg5904\endcsname{Autres titres conférant un droit de propriété}
+\expandafter\def\csname pcg5906\endcsname{Obligations}
+\expandafter\def\csname pcg5908\endcsname{Autres valeurs mobilières de placement et créances assimilées}
+\expandafter\def\csname pcg6\endcsname{Comptes de charges}
+\expandafter\def\csname pcg60\endcsname{Achats (sauf 603)}
+\expandafter\def\csname pcg601\endcsname{Achats stockés – Matières premières (et fournitures)}
+\expandafter\def\csname pcg6011\endcsname{Matières (ou groupe) A}
+\expandafter\def\csname pcg6012\endcsname{Matières (ou groupe) B}
+\expandafter\def\csname pcg6017\endcsname{Fournitures A, B, C,}
+\expandafter\def\csname pcg602\endcsname{Achats stockés – Autres approvisionnements}
+\expandafter\def\csname pcg6021\endcsname{Matières consommables}
+\expandafter\def\csname pcg60211\endcsname{Matières (ou groupe) C}
+\expandafter\def\csname pcg60212\endcsname{Matières (ou groupe) D}
+\expandafter\def\csname pcg6022\endcsname{Fournitures consommables}
+\expandafter\def\csname pcg60221\endcsname{Combustibles}
+\expandafter\def\csname pcg60222\endcsname{Produits d’entretien}
+\expandafter\def\csname pcg60223\endcsname{Fournitures d’atelier et d’usine}
+\expandafter\def\csname pcg60224\endcsname{Fournitures de magasin}
+\expandafter\def\csname pcg60225\endcsname{Fourniture de bureau}
+\expandafter\def\csname pcg6026\endcsname{Emballages}
+\expandafter\def\csname pcg60261\endcsname{Emballages perdus}
+\expandafter\def\csname pcg60265\endcsname{Emballages récupérables non identifiables}
+\expandafter\def\csname pcg60267\endcsname{Emballages à usage mixte}
+\expandafter\def\csname pcg604\endcsname{Achats d’études et prestations de services}
+\expandafter\def\csname pcg605\endcsname{Achats de matériel, équipements et travaux}
+\expandafter\def\csname pcg606\endcsname{Achats non stockés de matière et fournitures}
+\expandafter\def\csname pcg6061\endcsname{Fournitures non stockables (eau, énergie, …)}
+\expandafter\def\csname pcg6063\endcsname{Fournitures d’entretien et de petit équipement}
+\expandafter\def\csname pcg6064\endcsname{Fournitures administratives}
+\expandafter\def\csname pcg6068\endcsname{Autres matières et fournitures}
+\expandafter\def\csname pcg607\endcsname{Achats de marchandises}
+\expandafter\def\csname pcg6071\endcsname{Marchandise (ou groupe) A}
+\expandafter\def\csname pcg6072\endcsname{Marchandise (ou groupe) B}
+\expandafter\def\csname pcg608\endcsname{(Compte réservé, le cas échéant, à la récapitulation des frais accessoires incorporés aux achats)}
+\expandafter\def\csname pcg609\endcsname{Rabais, remises et ristournes obtenus sur achats}
+\expandafter\def\csname pcg6091\endcsname{de matières premières (et fournitures)}
+\expandafter\def\csname pcg6092\endcsname{d’autres approvisionnements stockés}
+\expandafter\def\csname pcg6094\endcsname{d’études et prestations de services}
+\expandafter\def\csname pcg6095\endcsname{de matériel, équipements et travaux}
+\expandafter\def\csname pcg6096\endcsname{d’approvisionnements non stockés}
+\expandafter\def\csname pcg6097\endcsname{de marchandises}
+\expandafter\def\csname pcg6098\endcsname{Rabais, remises et ristournes non affectés}
+\expandafter\def\csname pcg603\endcsname{Variations des stocks (approvisionnements et marchandises)}
+\expandafter\def\csname pcg6031\endcsname{Variation des stocks de matières premières (et fournitures)}
+\expandafter\def\csname pcg6032\endcsname{Variation des stocks des autres approvisionnements}
+\expandafter\def\csname pcg6037\endcsname{Variation des stocks de marchandises 61/62 – Autres charges externes}
+\expandafter\def\csname pcg61\endcsname{Services extérieurs}
+\expandafter\def\csname pcg611\endcsname{Sous-traitance générale}
+\expandafter\def\csname pcg612\endcsname{Redevances de crédit-bail}
+\expandafter\def\csname pcg6122\endcsname{Crédit-bail mobilier}
+\expandafter\def\csname pcg6125\endcsname{Crédit-bail immobilier}
+\expandafter\def\csname pcg613\endcsname{Locations}
+\expandafter\def\csname pcg6132\endcsname{Locations immobilières}
+\expandafter\def\csname pcg6135\endcsname{Locations mobilières}
+\expandafter\def\csname pcg6136\endcsname{Malis sur emballages}
+\expandafter\def\csname pcg614\endcsname{Charges locatives et de copropriété}
+\expandafter\def\csname pcg615\endcsname{Entretien et réparations}
+\expandafter\def\csname pcg6152\endcsname{sur biens immobiliers}
+\expandafter\def\csname pcg6155\endcsname{sur biens mobiliers}
+\expandafter\def\csname pcg6156\endcsname{Maintenance}
+\expandafter\def\csname pcg616\endcsname{Primes d’assurances}
+\expandafter\def\csname pcg6161\endcsname{Multirisques}
+\expandafter\def\csname pcg6162\endcsname{Assurance obligatoire dommage construction}
+\expandafter\def\csname pcg6163\endcsname{Assurance – transport}
+\expandafter\def\csname pcg61636\endcsname{sur achats}
+\expandafter\def\csname pcg61637\endcsname{sur ventes}
+\expandafter\def\csname pcg61638\endcsname{sur autres biens}
+\expandafter\def\csname pcg6164\endcsname{Risques d’exploitation}
+\expandafter\def\csname pcg6165\endcsname{Insolvabilité clients}
+\expandafter\def\csname pcg617\endcsname{Études et recherches}
+\expandafter\def\csname pcg618\endcsname{Divers}
+\expandafter\def\csname pcg6181\endcsname{Documentation générale}
+\expandafter\def\csname pcg6183\endcsname{Documentation technique}
+\expandafter\def\csname pcg6185\endcsname{Frais de colloques, séminaires, conférences}
+\expandafter\def\csname pcg619\endcsname{Rabais, remises et ristournes obtenus sur services extérieurs}
+\expandafter\def\csname pcg62\endcsname{Autres services extérieurs}
+\expandafter\def\csname pcg621\endcsname{Personnel extérieur à l’entreprise}
+\expandafter\def\csname pcg6211\endcsname{Personnel intérimaire}
+\expandafter\def\csname pcg6214\endcsname{Personnel détaché ou prêté à l’entreprise}
+\expandafter\def\csname pcg622\endcsname{Rémunérations d’intermédiaires et honoraires}
+\expandafter\def\csname pcg6221\endcsname{Commissions et courtages sur achats}
+\expandafter\def\csname pcg6222\endcsname{Commissions et courtages sur ventes}
+\expandafter\def\csname pcg6224\endcsname{Rémunérations des transitaires}
+\expandafter\def\csname pcg6225\endcsname{Rémunérations d’affacturage}
+\expandafter\def\csname pcg6226\endcsname{Honoraires}
+\expandafter\def\csname pcg6227\endcsname{Frais d’actes et de contentieux}
+\expandafter\def\csname pcg6228\endcsname{Divers}
+\expandafter\def\csname pcg623\endcsname{Publicité, publications, relations publiques}
+\expandafter\def\csname pcg6231\endcsname{Annonces et insertions}
+\expandafter\def\csname pcg6232\endcsname{Échantillons}
+\expandafter\def\csname pcg6233\endcsname{Foires et expositions}
+\expandafter\def\csname pcg6234\endcsname{Cadeaux à la clientèle}
+\expandafter\def\csname pcg6235\endcsname{Primes}
+\expandafter\def\csname pcg6236\endcsname{Catalogues et imprimés}
+\expandafter\def\csname pcg6237\endcsname{Publications}
+\expandafter\def\csname pcg6238\endcsname{Divers (pourboires, dons courants, …)}
+\expandafter\def\csname pcg624\endcsname{Transports de biens et transports collectifs du personnel}
+\expandafter\def\csname pcg6241\endcsname{Transports sur achats}
+\expandafter\def\csname pcg6242\endcsname{Transports sur ventes}
+\expandafter\def\csname pcg6243\endcsname{Transports entre établissements ou chantiers}
+\expandafter\def\csname pcg6244\endcsname{Transports administratifs}
+\expandafter\def\csname pcg6247\endcsname{Transports collectifs du personnel}
+\expandafter\def\csname pcg6248\endcsname{Divers}
+\expandafter\def\csname pcg625\endcsname{Déplacements, missions et réceptions}
+\expandafter\def\csname pcg6251\endcsname{Voyages et déplacements}
+\expandafter\def\csname pcg6255\endcsname{Frais de déménagement}
+\expandafter\def\csname pcg6256\endcsname{Missions}
+\expandafter\def\csname pcg6257\endcsname{Réceptions}
+\expandafter\def\csname pcg626\endcsname{Frais postaux et de télécommunications}
+\expandafter\def\csname pcg627\endcsname{Services bancaires et assimilés}
+\expandafter\def\csname pcg6271\endcsname{Frais sur titres (achat, vente, garde)}
+\expandafter\def\csname pcg6272\endcsname{Commissions et frais sur émission d’emprunts}
+\expandafter\def\csname pcg6275\endcsname{Frais sur effets}
+\expandafter\def\csname pcg6276\endcsname{Location de coffres}
+\expandafter\def\csname pcg6278\endcsname{Autres frais et commissions sur prestations de services}
+\expandafter\def\csname pcg628\endcsname{Divers}
+\expandafter\def\csname pcg6281\endcsname{Concours divers (cotisations, )}
+\expandafter\def\csname pcg6284\endcsname{Frais de recrutement de personnel}
+\expandafter\def\csname pcg629\endcsname{Rabais, remises et ristournes obtenus sur autres services extérieurs}
+\expandafter\def\csname pcg63\endcsname{Impôts, taxes et versements assimilés}
+\expandafter\def\csname pcg631\endcsname{Impôts, taxes et versements assimilés sur rémunérations (administrations des impôts)}
+\expandafter\def\csname pcg6311\endcsname{Taxe sur les salaires}
+\expandafter\def\csname pcg6312\endcsname{Taxe d’apprentissage}
+\expandafter\def\csname pcg6313\endcsname{Participation des employeurs à la formation professionnelle continue}
+\expandafter\def\csname pcg6314\endcsname{Cotisation pour défaut d’investissement obligatoire dans la construction}
+\expandafter\def\csname pcg6318\endcsname{Autres}
+\expandafter\def\csname pcg633\endcsname{Impôts, taxes et versements assimilés sur rémunérations (autres organismes)}
+\expandafter\def\csname pcg6331\endcsname{Versement de transport}
+\expandafter\def\csname pcg6332\endcsname{Allocations logement}
+\expandafter\def\csname pcg6333\endcsname{Participation des employeurs à la formation professionnelle continue}
+\expandafter\def\csname pcg6334\endcsname{Participation des employeurs à l’effort de construction}
+\expandafter\def\csname pcg6335\endcsname{Versements libératoires ouvrant droit à l’exonération de la taxe d’apprentissage}
+\expandafter\def\csname pcg6338\endcsname{Autres}
+\expandafter\def\csname pcg635\endcsname{Autres impôts, taxes et versements assimilés (administrations des impôts)}
+\expandafter\def\csname pcg6351\endcsname{Impôts directs (sauf impôts sur les bénéfices)}
+\expandafter\def\csname pcg63511\endcsname{Contribution économique territoriale}
+\expandafter\def\csname pcg63512\endcsname{Taxes foncières}
+\expandafter\def\csname pcg63513\endcsname{Autres impôts locaux}
+\expandafter\def\csname pcg63514\endcsname{Taxe sur les véhicules des sociétés}
+\expandafter\def\csname pcg6352\endcsname{Taxe sur le chiffre d’affaires non récupérables}
+\expandafter\def\csname pcg6353\endcsname{Impôts indirects}
+\expandafter\def\csname pcg6354\endcsname{Droits d’enregistrement et de timbre}
+\expandafter\def\csname pcg63541\endcsname{Droits de mutation}
+\expandafter\def\csname pcg6358\endcsname{Autres droits}
+\expandafter\def\csname pcg637\endcsname{Autres impôts, taxes et versements assimilés (autres organismes)}
+\expandafter\def\csname pcg6371\endcsname{Contribution sociale de solidarité à la charge des sociétés}
+\expandafter\def\csname pcg6372\endcsname{Taxes perçues par les organismes publics internationaux}
+\expandafter\def\csname pcg6374\endcsname{Impôts et taxes exigibles à l’Étranger}
+\expandafter\def\csname pcg6378\endcsname{Taxes diverses}
+\expandafter\def\csname pcg64\endcsname{Charges de personnel}
+\expandafter\def\csname pcg641\endcsname{Rémunérations du personnel}
+\expandafter\def\csname pcg6411\endcsname{Salaires, appointements}
+\expandafter\def\csname pcg6412\endcsname{Congés payés}
+\expandafter\def\csname pcg6413\endcsname{Primes et gratifications}
+\expandafter\def\csname pcg6414\endcsname{Indemnités et avantages divers}
+\expandafter\def\csname pcg6415\endcsname{Supplément familial}
+\expandafter\def\csname pcg644\endcsname{Rémunération du travail de l’exploitant}
+\expandafter\def\csname pcg645\endcsname{Charges de sécurité sociale et de prévoyance}
+\expandafter\def\csname pcg6451\endcsname{Cotisations à l’URSSAF}
+\expandafter\def\csname pcg6452\endcsname{Cotisations aux mutuelles}
+\expandafter\def\csname pcg6453\endcsname{Cotisations aux caisses de retraites}
+\expandafter\def\csname pcg6454\endcsname{Cotisations aux ASSEDIC}
+\expandafter\def\csname pcg6458\endcsname{Cotisations aux autres organismes sociaux}
+\expandafter\def\csname pcg646\endcsname{Cotisations sociales personnelles de l’exploitant}
+\expandafter\def\csname pcg647\endcsname{Autres charges sociales}
+\expandafter\def\csname pcg6471\endcsname{Prestations directes}
+\expandafter\def\csname pcg6472\endcsname{Versements aux comités d’entreprise et d’établissement}
+\expandafter\def\csname pcg6473\endcsname{Versements aux comités d’hygiène et de sécurité}
+\expandafter\def\csname pcg6474\endcsname{Versements aux autres œuvres sociales}
+\expandafter\def\csname pcg6475\endcsname{Médecine du travail, pharmacie}
+\expandafter\def\csname pcg648\endcsname{Autres charges de personnel}
+\expandafter\def\csname pcg65\endcsname{Autres charges de gestion courante}
+\expandafter\def\csname pcg651\endcsname{Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires}
+\expandafter\def\csname pcg6511\endcsname{Redevances pour concessions, brevets, licences, marques, procédés, logiciels}
+\expandafter\def\csname pcg6516\endcsname{Droits d’auteur et de reproduction}
+\expandafter\def\csname pcg6518\endcsname{Autres droits et valeurs similaires}
+\expandafter\def\csname pcg653\endcsname{Jetons de présence}
+\expandafter\def\csname pcg654\endcsname{Pertes sur créances irrécouvrables}
+\expandafter\def\csname pcg6541\endcsname{Créances de l’exercice}
+\expandafter\def\csname pcg6544\endcsname{Créances des exercices antérieurs}
+\expandafter\def\csname pcg655\endcsname{Quote-part de résultat sur opérations faites en commun}
+\expandafter\def\csname pcg6551\endcsname{Quote-part de bénéfice transférée (comptabilité du gérant)}
+\expandafter\def\csname pcg6555\endcsname{Quote-part de perte supportée (comptabilité des associés non gérants)}
+\expandafter\def\csname pcg656\endcsname{Pertes de change sur créances commerciales}
+\expandafter\def\csname pcg658\endcsname{Charges diverses de gestion courante}
+\expandafter\def\csname pcg66\endcsname{Charges financières}
+\expandafter\def\csname pcg661\endcsname{Charges d’intérêts}
+\expandafter\def\csname pcg6611\endcsname{Intérêts des emprunts et dettes}
+\expandafter\def\csname pcg66116\endcsname{des emprunts et dettes assimilées}
+\expandafter\def\csname pcg66117\endcsname{des dettes rattachées à des participations}
+\expandafter\def\csname pcg6612\endcsname{Charges de la fiducie, résultat de la période}
+\expandafter\def\csname pcg6615\endcsname{Intérêts des comptes courants et des dépôts créditeurs}
+\expandafter\def\csname pcg6616\endcsname{Intérêts bancaires et sur opérations de financement (escompte,...)}
+\expandafter\def\csname pcg6617\endcsname{Intérêts des obligations cautionnées}
+\expandafter\def\csname pcg6618\endcsname{Intérêts des autres dettes}
+\expandafter\def\csname pcg66181\endcsname{des dettes commerciales}
+\expandafter\def\csname pcg66188\endcsname{des dettes diverses}
+\expandafter\def\csname pcg664\endcsname{Pertes sur créances liées à des participations}
+\expandafter\def\csname pcg665\endcsname{Escomptes accordés}
+\expandafter\def\csname pcg666\endcsname{Pertes de change financières}
+\expandafter\def\csname pcg667\endcsname{Charges nettes sur cessions de valeurs mobilières de placement}
+\expandafter\def\csname pcg668\endcsname{Autres charges financières}
+\expandafter\def\csname pcg67\endcsname{Charges exceptionnelles}
+\expandafter\def\csname pcg671\endcsname{Charges exceptionnelles sur opérations de gestion}
+\expandafter\def\csname pcg6711\endcsname{Pénalités sur marchés (et dédits payés sur achats et ventes)}
+\expandafter\def\csname pcg6712\endcsname{Pénalités, amendes fiscales et pénales}
+\expandafter\def\csname pcg6713\endcsname{Dons, libéralités}
+\expandafter\def\csname pcg6714\endcsname{Créances devenues irrécouvrables dans l’exercice}
+\expandafter\def\csname pcg6715\endcsname{Subventions accordées}
+\expandafter\def\csname pcg6717\endcsname{Rappel d’impôts (autres qu’impôts sur les bénéfices)}
+\expandafter\def\csname pcg6718\endcsname{Autres charges exceptionnelles sur opérations de gestion}
+\expandafter\def\csname pcg672\endcsname{(Compte à la disposition des entités pour enregistrer, en cours d’exercice, les charges sur exercices antérieurs)}
+\expandafter\def\csname pcg674\endcsname{Opérations de constitution ou liquidation des fiducies}
+\expandafter\def\csname pcg6741\endcsname{Opérations liées à la constitution de fiducie – Transfert des éléments}
+\expandafter\def\csname pcg6742\endcsname{Opérations liées à la liquidation de la fiducie}
+\expandafter\def\csname pcg675\endcsname{Valeurs comptables des éléments d’actif cédés}
+\expandafter\def\csname pcg6751\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg6752\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg6756\endcsname{Immobilisations financières}
+\expandafter\def\csname pcg6758\endcsname{Autres éléments d’actif}
+\expandafter\def\csname pcg678\endcsname{Autres charges exceptionnelles}
+\expandafter\def\csname pcg6781\endcsname{Malis provenant de clauses d’indexation}
+\expandafter\def\csname pcg6782\endcsname{Lots}
+\expandafter\def\csname pcg6783\endcsname{Malis provenant du rachat par l’entreprise d’actions et obligations émises par elle-même}
+\expandafter\def\csname pcg6788\endcsname{Charges exceptionnelles diverses}
+\expandafter\def\csname pcg68\endcsname{Dotations aux amortissements, aux dépréciations et aux provisions}
+\expandafter\def\csname pcg681\endcsname{Dotations aux amortissements, aux dépréciations et aux provisions – Charges d’exploitation}
+\expandafter\def\csname pcg6811\endcsname{Dotations aux amortissements sur immobilisations incorporelles et corporelles}
+\expandafter\def\csname pcg68111\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg68112\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg6812\endcsname{Dotations aux amortissements des charges d’exploitation à répartir}
+\expandafter\def\csname pcg6815\endcsname{Dotations aux provisions d’exploitation}
+\expandafter\def\csname pcg6816\endcsname{Dotations pour dépréciations des immobilisations incorporelles et corporelles}
+\expandafter\def\csname pcg68161\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg68162\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg6817\endcsname{Dotations pour dépréciations des actifs circulants}
+\expandafter\def\csname pcg68173\endcsname{Stocks et en-cours}
+\expandafter\def\csname pcg68174\endcsname{Créances}
+\expandafter\def\csname pcg686\endcsname{Dotations aux amortissements, aux dépréciations et aux provisions – Charges financières}
+\expandafter\def\csname pcg6861\endcsname{Dotations aux amortissements des primes de remboursement des obligations}
+\expandafter\def\csname pcg6865\endcsname{Dotations aux provisions financières}
+\expandafter\def\csname pcg6866\endcsname{Dotations pour dépréciations des éléments financiers}
+\expandafter\def\csname pcg68662\endcsname{Immobilisations financières}
+\expandafter\def\csname pcg68665\endcsname{Valeurs mobilières de placement}
+\expandafter\def\csname pcg6868\endcsname{Autres dotations}
+\expandafter\def\csname pcg687\endcsname{Dotations aux amortissements, aux dépréciations et aux provisions – Charges exceptionnelles}
+\expandafter\def\csname pcg6871\endcsname{Dotations aux amortissements exceptionnels des immobilisations}
+\expandafter\def\csname pcg6872\endcsname{Dotations aux provisions réglementées (immobilisations)}
+\expandafter\def\csname pcg68725\endcsname{Amortissements dérogatoires}
+\expandafter\def\csname pcg6873\endcsname{Dotations aux provisions réglementées (stocks)}
+\expandafter\def\csname pcg6874\endcsname{Dotations aux autres provisions réglementées}
+\expandafter\def\csname pcg6875\endcsname{Dotations aux provisions exceptionnelles}
+\expandafter\def\csname pcg6876\endcsname{Dotations pour dépréciations exceptionnelles}
+\expandafter\def\csname pcg69\endcsname{Participation des salariés – Impôts sur les bénéfices et assimilés}
+\expandafter\def\csname pcg691\endcsname{Participation des salariés aux résultats}
+\expandafter\def\csname pcg695\endcsname{Impôts sur les bénéfices}
+\expandafter\def\csname pcg6951\endcsname{Impôts dus en France}
+\expandafter\def\csname pcg6952\endcsname{Contribution additionnelle à l’impôt sur les bénéfices}
+\expandafter\def\csname pcg6954\endcsname{Impôts dus à l’étranger}
+\expandafter\def\csname pcg696\endcsname{Suppléments d’impôt sur les sociétés liés aux distributions}
+\expandafter\def\csname pcg698\endcsname{Intégration fiscale}
+\expandafter\def\csname pcg6981\endcsname{Intégration fiscale – Charges}
+\expandafter\def\csname pcg6989\endcsname{Intégration fiscale – Produits}
+\expandafter\def\csname pcg699\endcsname{Produits – Reports en arrière des déficits}
+\expandafter\def\csname pcg7\endcsname{Comptes de produits}
+\expandafter\def\csname pcg70\endcsname{Ventes de produits fabriqués, prestations de services, marchandises}
+\expandafter\def\csname pcg701\endcsname{Ventes de produits finis}
+\expandafter\def\csname pcg7011\endcsname{Produits finis (ou groupe) A}
+\expandafter\def\csname pcg7012\endcsname{Produits finis (ou groupe) B}
+\expandafter\def\csname pcg702\endcsname{Ventes de produits intermédiaires}
+\expandafter\def\csname pcg703\endcsname{Ventes de produits résiduels}
+\expandafter\def\csname pcg704\endcsname{Travaux}
+\expandafter\def\csname pcg7041\endcsname{Travaux de catégorie (ou activité) A}
+\expandafter\def\csname pcg7042\endcsname{Travaux de catégorie (ou activité) B}
+\expandafter\def\csname pcg705\endcsname{Études}
+\expandafter\def\csname pcg706\endcsname{Prestations de services}
+\expandafter\def\csname pcg707\endcsname{Ventes de marchandises}
+\expandafter\def\csname pcg7071\endcsname{Marchandises (ou groupe) A}
+\expandafter\def\csname pcg7072\endcsname{Marchandises (ou groupe) B}
+\expandafter\def\csname pcg708\endcsname{Produits des activités annexes}
+\expandafter\def\csname pcg7081\endcsname{Produits des services exploités dans l’intérêt du personnel}
+\expandafter\def\csname pcg7082\endcsname{Commissions et courtages}
+\expandafter\def\csname pcg7083\endcsname{Locations diverses}
+\expandafter\def\csname pcg7084\endcsname{Mise à disposition de personnel facturée}
+\expandafter\def\csname pcg7085\endcsname{Ports et frais accessoires facturés}
+\expandafter\def\csname pcg7086\endcsname{Bonis sur reprises d’emballages consignés}
+\expandafter\def\csname pcg7087\endcsname{Bonifications obtenues des clients et primes sur ventes}
+\expandafter\def\csname pcg7088\endcsname{Autres produits d’activités annexes (cessions d’approvisionnements,)}
+\expandafter\def\csname pcg709\endcsname{Rabais, remises et ristournes accordés par l’entreprise}
+\expandafter\def\csname pcg7091\endcsname{sur ventes de produits finis}
+\expandafter\def\csname pcg7092\endcsname{sur ventes de produits intermédiaires}
+\expandafter\def\csname pcg7094\endcsname{sur travaux}
+\expandafter\def\csname pcg7095\endcsname{sur études}
+\expandafter\def\csname pcg7096\endcsname{sur prestations de services}
+\expandafter\def\csname pcg7097\endcsname{sur ventes de marchandises}
+\expandafter\def\csname pcg7098\endcsname{sur produits des activités annexes}
+\expandafter\def\csname pcg71\endcsname{Production stockée (ou déstockage)}
+\expandafter\def\csname pcg713\endcsname{Variation des stocks (en-cours de production, produits)}
+\expandafter\def\csname pcg7133\endcsname{Variation des en-cours de production de biens}
+\expandafter\def\csname pcg71331\endcsname{Produits en cours}
+\expandafter\def\csname pcg71335\endcsname{Travaux en cours}
+\expandafter\def\csname pcg7134\endcsname{Variation des en-cours de production de services}
+\expandafter\def\csname pcg71341\endcsname{Études en cours}
+\expandafter\def\csname pcg71345\endcsname{Prestations de services en cours}
+\expandafter\def\csname pcg7135\endcsname{Variation des stocks de produits}
+\expandafter\def\csname pcg71351\endcsname{Produits intermédiaires}
+\expandafter\def\csname pcg71355\endcsname{Produits finis}
+\expandafter\def\csname pcg71358\endcsname{Produits résiduels}
+\expandafter\def\csname pcg72\endcsname{Production immobilisée}
+\expandafter\def\csname pcg721\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg722\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg74\endcsname{Subventions d’exploitation}
+\expandafter\def\csname pcg75\endcsname{Autres produits de gestion courante}
+\expandafter\def\csname pcg751\endcsname{Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires}
+\expandafter\def\csname pcg7511\endcsname{Redevances pour concessions, brevets, licences, marques, procédés, logiciels}
+\expandafter\def\csname pcg7516\endcsname{Droits d’auteur et de reproduction}
+\expandafter\def\csname pcg7518\endcsname{Autres droits et valeurs similaires}
+\expandafter\def\csname pcg752\endcsname{Revenus des immeubles non affectés à des activités professionnelles}
+\expandafter\def\csname pcg753\endcsname{Jetons de présence et rémunérations d’administrateurs, gérants,}
+\expandafter\def\csname pcg754\endcsname{Ristournes perçues des coopératives (provenant des excédents)}
+\expandafter\def\csname pcg755\endcsname{Quote-parts de résultat sur opérations faites en commun}
+\expandafter\def\csname pcg7551\endcsname{Quote-part de perte transférée (comptabilité du gérant)}
+\expandafter\def\csname pcg7555\endcsname{Quote-part de bénéfice attribuée (comptabilité des associés non-gérants)}
+\expandafter\def\csname pcg756\endcsname{Gains de change sur créances commerciales}
+\expandafter\def\csname pcg758\endcsname{Produits divers de gestion courante}
+\expandafter\def\csname pcg76\endcsname{Produits financiers}
+\expandafter\def\csname pcg761\endcsname{Produits de participations}
+\expandafter\def\csname pcg7611\endcsname{Revenus des titres de participation}
+\expandafter\def\csname pcg7612\endcsname{Produits de la fiducie, résultat de la période}
+\expandafter\def\csname pcg7616\endcsname{Revenus sur autres formes de participation}
+\expandafter\def\csname pcg7617\endcsname{Revenus des créances rattachées à des participations}
+\expandafter\def\csname pcg762\endcsname{Produits des autres immobilisations financières}
+\expandafter\def\csname pcg7621\endcsname{Revenus des titres immobilisés}
+\expandafter\def\csname pcg7626\endcsname{Revenus des prêts}
+\expandafter\def\csname pcg7627\endcsname{Revenus des créances immobilisées}
+\expandafter\def\csname pcg763\endcsname{Revenus des autres créances}
+\expandafter\def\csname pcg7631\endcsname{Revenus des créances commerciales}
+\expandafter\def\csname pcg7638\endcsname{Revenus des créances diverses}
+\expandafter\def\csname pcg764\endcsname{Revenus des valeurs mobilières de placement}
+\expandafter\def\csname pcg765\endcsname{Escomptes obtenus}
+\expandafter\def\csname pcg766\endcsname{Gains de change financiers}
+\expandafter\def\csname pcg767\endcsname{Produits nets sur cessions de valeurs mobilières de placement}
+\expandafter\def\csname pcg768\endcsname{Autres produits financiers}
+\expandafter\def\csname pcg77\endcsname{Produits exceptionnels}
+\expandafter\def\csname pcg771\endcsname{Produits exceptionnels sur opérations de gestion}
+\expandafter\def\csname pcg7711\endcsname{Dédits et pénalités perçus sur achats et sur ventes}
+\expandafter\def\csname pcg7713\endcsname{Libéralités reçues}
+\expandafter\def\csname pcg7714\endcsname{Rentrées sur créances amorties}
+\expandafter\def\csname pcg7715\endcsname{Subventions d’équilibre}
+\expandafter\def\csname pcg7717\endcsname{Dégrèvements d’impôts autres qu’impôts sur les bénéfices}
+\expandafter\def\csname pcg7718\endcsname{Autres produits exceptionnels sur opérations de gestion}
+\expandafter\def\csname pcg772\endcsname{(Compte à la disposition des entités pour enregistrer, en cours d’exercice, les produits sur exercices antérieurs)}
+\expandafter\def\csname pcg774\endcsname{Opérations de constitution ou liquidation des fiducies}
+\expandafter\def\csname pcg7741\endcsname{Opérations liées à la constitution de fiducie – Transfert des éléments}
+\expandafter\def\csname pcg7742\endcsname{Opérations liées à la liquidation de la fiducie}
+\expandafter\def\csname pcg775\endcsname{Produits des cessions d’éléments d’actif}
+\expandafter\def\csname pcg7751\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg7752\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg7756\endcsname{Immobilisations financières}
+\expandafter\def\csname pcg7758\endcsname{Autres éléments d’actif}
+\expandafter\def\csname pcg777\endcsname{Quote-part des subventions d’investissement virée au résultat de l’exercice}
+\expandafter\def\csname pcg778\endcsname{Autres produits exceptionnels}
+\expandafter\def\csname pcg7781\endcsname{Bonis provenant de clauses d’indexation}
+\expandafter\def\csname pcg7782\endcsname{Lots}
+\expandafter\def\csname pcg7783\endcsname{Bonis provenant du rachat par l’entreprise d’actions et d’obligations émises par elle-même}
+\expandafter\def\csname pcg7788\endcsname{Produits exceptionnels divers}
+\expandafter\def\csname pcg78\endcsname{Reprises sur amortissements, dépréciations et provisions}
+\expandafter\def\csname pcg781\endcsname{Reprises sur amortissements, dépréciations et provisions (à inscrire dans les produits d’exploitation)}
+\expandafter\def\csname pcg7811\endcsname{Reprises sur amortissements des immobilisations incorporelles et corporelles}
+\expandafter\def\csname pcg78111\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg78112\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg7815\endcsname{Reprises sur provisions d’exploitation}
+\expandafter\def\csname pcg7816\endcsname{Reprises sur dépréciations des immobilisations incorporelles et corporelles}
+\expandafter\def\csname pcg78161\endcsname{Immobilisations incorporelles}
+\expandafter\def\csname pcg78162\endcsname{Immobilisations corporelles}
+\expandafter\def\csname pcg7817\endcsname{Reprises sur dépréciations des actifs circulants}
+\expandafter\def\csname pcg78173\endcsname{Stocks et en-cours}
+\expandafter\def\csname pcg78174\endcsname{Créances}
+\expandafter\def\csname pcg786\endcsname{Reprises sur provisions pour risques et dépréciations (à inscrire dans les produits financiers)}
+\expandafter\def\csname pcg7865\endcsname{Reprises sur provisions financières}
+\expandafter\def\csname pcg7866\endcsname{Reprises sur dépréciations des éléments financiers}
+\expandafter\def\csname pcg78662\endcsname{Immobilisations financières}
+\expandafter\def\csname pcg78665\endcsname{Valeurs mobilières de placements}
+\expandafter\def\csname pcg787\endcsname{Reprises sur provisions et dépréciations (à inscrire dans les produits exceptionnels)}
+\expandafter\def\csname pcg7872\endcsname{Reprises sur provisions réglementées (immobilisations)}
+\expandafter\def\csname pcg78725\endcsname{Amortissements dérogatoires}
+\expandafter\def\csname pcg78726\endcsname{Provision spéciale de réévaluation}
+\expandafter\def\csname pcg78727\endcsname{Plus-values réinvesties}
+\expandafter\def\csname pcg7873\endcsname{Reprises sur provisions réglementées (stocks)}
+\expandafter\def\csname pcg7874\endcsname{Reprises sur autres provisions réglementées}
+\expandafter\def\csname pcg7875\endcsname{Reprises sur provisions exceptionnelles}
+\expandafter\def\csname pcg7876\endcsname{Reprises sur dépréciations exceptionnelles}
+\expandafter\def\csname pcg79\endcsname{Transferts de charges}
+\expandafter\def\csname pcg791\endcsname{Transferts de charges d’exploitation}
+\expandafter\def\csname pcg796\endcsname{Transferts de charges financières}
+\expandafter\def\csname pcg797\endcsname{Transferts de charges exceptionnelles}
+\expandafter\def\csname pcg8\endcsname{Comptes spéciaux}
+\expandafter\def\csname pcg80\endcsname{Engagements}
+\expandafter\def\csname pcg801\endcsname{Engagements donnés par l’entité}
+\expandafter\def\csname pcg8011\endcsname{Avals, cautions, garanties}
+\expandafter\def\csname pcg8014\endcsname{Effets circulant sous l’endos de l’entité}
+\expandafter\def\csname pcg8016\endcsname{Redevances crédit-bail restant à courir}
+\expandafter\def\csname pcg80161\endcsname{Crédit-bail mobilier}
+\expandafter\def\csname pcg80165\endcsname{Crédit-bail immobilier}
+\expandafter\def\csname pcg8018\endcsname{Autres engagements donnés}
+\expandafter\def\csname pcg802\endcsname{Engagements reçus par l’entité}
+\expandafter\def\csname pcg8021\endcsname{Avals, cautions, garanties}
+\expandafter\def\csname pcg8024\endcsname{Créances escomptées non échues}
+\expandafter\def\csname pcg8026\endcsname{Engagements reçus pour utilisation en crédit-bail}
+\expandafter\def\csname pcg80261\endcsname{Crédit-bail mobilier}
+\expandafter\def\csname pcg80265\endcsname{Crédit-bail immobilier}
+\expandafter\def\csname pcg8028\endcsname{Autres engagements reçus}
+\expandafter\def\csname pcg809\endcsname{Contrepartie des engagements}
+\expandafter\def\csname pcg8091\endcsname{Contrepartie 801}
+\expandafter\def\csname pcg8092\endcsname{Contrepartie 802}
+\expandafter\def\csname pcg88\endcsname{Résultat en instance d’affectation}
+\expandafter\def\csname pcg89\endcsname{Bilan}
+\expandafter\def\csname pcg890\endcsname{Bilan d’ouverture}
+\expandafter\def\csname pcg891\endcsname{Bilan de clôture}
