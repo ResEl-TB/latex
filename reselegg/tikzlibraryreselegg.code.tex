@@ -1,0 +1,80 @@
+%%% ResEl Egg TikZ library
+%
+% Copyright (c) 2021 Benjamin Somers, All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+%
+%     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+%     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+%     Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+%%%---
+
+\usetikzlibrary{decorations.pathmorphing}
+\definecolor{reselTurquoise}{RGB}{36,182,209}
+
+\pgfmathsetseed{49856}
+
+\pgfdeclaredecoration{irregular fractal line}{init}{%
+  \state{init}[width=\pgfdecoratedinputsegmentremainingdistance]{%
+    \pgfpathlineto{\pgfpoint{random*\pgfdecoratedinputsegmentremainingdistance}{(random*\pgfdecorationsegmentamplitude-0.02)*\pgfdecoratedinputsegmentremainingdistance}}
+    \pgfpathlineto{\pgfpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+  }
+}
+
+\pgfdeclaredecoration{simplify}{start}{%
+  \state{start}[width=+0pt,next state=step,persistent precomputation=\pgfdecoratepathhascornerstrue]{}%
+  \state{step}[auto end on length=1.5\pgfdecorationsegmentlength, auto corner on length=1.5\pgfdecorationsegmentlength, width=+\pgfdecorationsegmentlength]{%
+    \pgfpathlineto{\pgfpointadd{\pgfpoint{\pgfdecorationsegmentlength}{0}}{\pgfpoint{0}{0}}}
+  }%
+  \state{final}
+  {}%
+}%
+
+
+\tikzset{%
+   irregular border/.style={decoration={irregular fractal line, amplitude=0.2}, decorate},
+   simplified/.style={decoration={simplify, segment length=5mm}, decorate}
+}
+
+\def\@egg@path{plot[domain=-pi:pi,samples=100]({2.34*cos(\x/4 r)*sin(\x r)},{-3*(cos(\x r))}) -- cycle}
+
+\def\@egg@split{decorate[irregular border]{decorate{decorate{decorate[simplified]{(-2.5,1.5) to[bend right=30] (2.5,1.5)}}}}}
+
+\def\reselegg{%
+  \begin{scope}[even odd rule]
+    \clip\@egg@path;
+    \fill[white] (-2.5,-3.5) rectangle (2.5,3.5);
+    \fill[reselTurquoise] (-1.8,1.2) circle[x radius=.3, y radius=.4, rotate=-15];
+    \fill[reselTurquoise] (1.8,1.8) circle[x radius=.35, y radius=.4, rotate=10];
+  \end{scope}
+  \fill[reselTurquoise] (-1.05,-1.05) circle[x radius=.6, y radius=.8, rotate=15];
+  \fill[reselTurquoise] (.5,.2) circle[x radius=.6, y radius=.7, rotate=5];
+  \fill[reselTurquoise] (.8,-1.7) circle[x radius=.2, y radius=.2];
+  \fill[reselTurquoise] (-.9,.5) circle[x radius=.2, y radius=.2];
+  \path[preaction={fill=black,fill opacity=0.05}, ball color=white,fill opacity=.3]\@egg@path;
+}
+
+\def\cracked#1{%
+  #1
+  \begin{scope}[even odd rule]
+    \clip\@egg@path;
+    \draw[line width=1mm, black!70]\@egg@split;
+  \end{scope}
+}
+
+\def\bottomof#1{%
+  \begin{scope}[even odd rule]
+    \clip\@egg@split -- ++(0,-5) -- ++(-5,0) -- cycle;
+    #1
+  \end{scope}
+}
+
+\def\topof#1{%
+  \begin{scope}[even odd rule]
+    \clip\@egg@split -- ++(0,2) -- ++(-5,0) -- cycle;
+    #1
+  \end{scope}
+}
