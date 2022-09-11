@@ -62,7 +62,7 @@
 \def\@rl@sigspace{3\parskip}
 \def\collapsesigspace{\def\@rl@sigspace{0mm}} % collapse the spacing
 
-\put {locndate} at {14cm} {84.3mm} % location and date block position
+\bput {locndate} at {14cm} {84.3mm} % location and date block position
 %%%---
 
 

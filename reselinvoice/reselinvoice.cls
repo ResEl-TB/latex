@@ -45,8 +45,9 @@
 \def\@ri@bybanktransferlabel{Par virement bancaire}          % bank transfer label
 \def\@ri@bychecklabel       {Par chèque}                     % check label
 \def\@ri@detailsheader      {Détails de la facture (TTC)}    % invoice table header
-\def\@ri@disclaimer         {Les montants unitaires sont arrondis au centième le plus proche. Leur somme peut différer du montant total.}
+\def\@ri@disclaimer         {Les montants unitaires sont arrondis au centième le plus proche. Leur somme peut différer du montant total. TVA non applicable (article 293~B du Code Général des Impôts).}
                                                              % disclaimer invoice below
+\def\@ri@specialheader      {Conditions spéciales}           % special conditions header
 \def\@ri@checktolabel       {À l'ordre suivant~}             % check recipient
 \def\@ri@bankcode           {Code banque}                    % bank code label
 \def\@ri@branchcode         {Code agence}                    % branch code label
@@ -88,30 +89,34 @@
 
 % Pretty formatter
 \def\addtablerow#1|#2x#3!{%
-  \FPeval{\invoicetotal}{clip(\invoicetotal+#2*#3)}%
-  \xdef\invoicetotal{\invoicetotal}%
+  \ifthenelse{\equal{\trim{#3}}{-}}%
+  {\gdef\@col@right{\multicolumn{1}{r}{\ttfamily\bfseries--\phantom{~\euro}}}}%
+  {\gdef\@col@right{\numprint{#3}}%
+   \FPeval{\invoicetotal}{clip(\invoicetotal+#2*#3)}%
+   \xdef\invoicetotal{\invoicetotal}}%
   \ifthenelse{\equal{\trim{#2}}{1}}%
-  {#1 & \multicolumn{1}{c}{} & \hfill\numprint{#3}\\}%
-  {#1 & #2 & \numprint{#3}\\}%
+  {\gdef\@col@center{\multicolumn{1}{r}{}}}%
+  {\gdef\@col@center{#2}}%
+  #1 & \@col@center & \@col@right\\%
 }
 
 % Main table generation loop
 \newcommand{\invoice}[1]{%
   \begin{bluetable}%
     \renewcommand*\do[1]{\addtablerow##1!}%
-    \begin{tabularx}{\textwidth}{p{0.55\textwidth}!{\color{gray!40}\vrule}>{\hfill\ttfamily\bfseries}p{0.09\textwidth}<{$\times$}  >{\hfill\ttfamily\bfseries}X<{ \euro}}%
+    \begin{tabularx}{\textwidth}{p{0.55\textwidth}!{\color{gray!40}\vrule}>{\hfill\ttfamily\bfseries}p{0.09\textwidth}<{$\times$}  >{\hfill\ttfamily\bfseries}X<{~\euro}}%
       \hiderowcolors%
-      \multicolumn{3}{c}{} \\[-6mm]
-      \multicolumn{3}{c}{\textbf{\@ri@detailsheader}} \\[0.5mm]
+      \multicolumn{3}{c}{} \\[-6mm]%
+      \multicolumn{3}{c}{\textbf{\@ri@detailsheader}} \\[0.5mm]%
       \showrowcolors%
       \def\invoicetotal{0}%
       \xdef\invoicetotal{\invoicetotal}%
-      \docsvlist{#1}
-      \arrayrulecolor{gray!40}\hline
-      \hiderowcolors
-      \multicolumn{3}{c}{} \\[-6mm]
-      \multicolumn{1}{l}{\textbf{\@ri@totallabel}} & \multicolumn{2}{r}{ \textbf{\texttt{\numprint{\invoicetotal} \euro}}} \\[0.5mm]
-      \showrowcolors
+      \docsvlist{#1}%
+      \arrayrulecolor{gray!40}\hline%
+      \hiderowcolors%
+      \multicolumn{3}{c}{} \\[-6mm]%
+      \multicolumn{1}{l}{\textbf{\@ri@totallabel}} & \multicolumn{2}{r}{ \textbf{\texttt{\numprint{\invoicetotal} \euro}}} \\[0.5mm]%
+      \showrowcolors%
     \end{tabularx}%
   \end{bluetable}
   \centerline{\tiny\@ri@disclaimer}
@@ -134,16 +139,16 @@
   \StrLeft{\@rawiban@ribkey}{2}[\@val@@ribkey]%
   \def\@ribline{}%
   \foreach\x in\ribproperties{\protected@xappto\@ribline{&\textbf{\scriptsize\csname @prop@\x\endcsname}}}%
-  \appto\@ribline\\%
+  \appto\@ribline{\\\multicolumn{1}{c|}{}}%
   \foreach\x [count=\i] in\ribproperties{\protected@xappto\@ribline{&\ifnum\i=5\sf\else\tt\fi\csname @val@\x\endcsname}}%
   \begin{bluetable}%
-    \begin{tabularx}{0.9\textwidth}{>{\centering}X|>{\small}c|>{\small}c|>{\small}c|>{\small}c|>{\small}c}%
-      \multicolumn{6}{c}{} \\[-6mm]
-      \multicolumn{6}{c}{\textbf{\@ri@bybanktransferlabel}} \\[0.5mm]
-      \arrayrulecolor{gray!40}\hline
-      \@prop@iban & \multicolumn{5}{c}{\texttt{\@val@iban}} \\\hline
-      \@prop@bic & \multicolumn{5}{c}{\texttt{\@val@bic}} \\\hline
-      \multirow{2}{*}{RIB} \@ribline
+    \begin{tabularx}{0.9\textwidth}{>{\centering}X>{\small}c|>{\small}c|>{\small}c|>{\small}c|>{\small}c}%
+      \multicolumn{6}{c}{} \\[-6mm]%
+      \multicolumn{6}{c}{\textbf{\@ri@bybanktransferlabel}} \\[0.5mm]%
+      \arrayrulecolor{gray!40}%
+      \@prop@iban & \multicolumn{5}{c}{\texttt{\@val@iban}} \\\hline%
+      \@prop@bic & \multicolumn{5}{c}{\texttt{\@val@bic}} \\\hline%
+      \multicolumn{1}{c|}{\multirow{2}{*}{RIB}}\@ribline%
     \end{tabularx}%
   \end{bluetable}%
 }
@@ -156,7 +161,6 @@
     \begin{tabularx}{0.9\textwidth}{cX}%
     \multicolumn{2}{c}{} \\[-6mm]
     \multicolumn{2}{c}{\textbf{\@ri@bychecklabel}} \\[0.5mm]
-    \arrayrulecolor{gray!40}\hline
     \@ri@checktolabel: & \centering\arraybackslash\og{}\@val@sender~\fg{}\\
     \end{tabularx}%
   \end{bluetable}%
@@ -174,5 +178,18 @@
     \ifallowbanktransfer&\bybanktransfer\\[3mm]\fi
     \ifallowcheck&\bycheck\\[3mm]\fi
   \end{tabularx}
+}
+
+% Display special conditions
+\newcommand{\specialconditions}[1]{%
+  \vspace{1cm}%
+  \begin{bluetable}%
+    \begin{tabularx}{\textwidth}{X}%
+      \hiderowcolors%
+      \multicolumn{1}{c}{} \\[-6mm]%
+      \multicolumn{1}{c}{\textbf{\@ri@specialheader}} \\[0.5mm]%
+      #1\\%
+    \end{tabularx}%
+  \end{bluetable}%
 }
 %%%---
