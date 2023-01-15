@@ -1,0 +1,154 @@
+% Copyright (c) 2021-2023 Benjamin Somers, All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+%
+%     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+%     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+%     Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+%%%---
+
+%%% Prelude
+\NeedsTeXFormat{LaTeX2e}
+
+% Define PCG package
+\ProvidesPackage{pcgtable}[Tableaux suivant le PCG]
+
+% Requirements
+\RequirePackage{pcg}
+\RequirePackage{fp} % for floating point operations
+\RequirePackage{numprint} % for correct number printing
+\RequirePackage{adjustbox}
+\RequirePackage{xcolor}
+\RequirePackage{colortbl}
+\RequirePackage{collcell}
+\RequirePackage{xstring}
+%%%---
+
+\npdecimalsign{,}
+\nprounddigits{2}
+\npthousandsep{~}
+
+% Format a number in the left part of the table
+\def\formatlnumber#1{%
+  \def\@temp{#1}%
+  \unless\ifx\@temp\empty%
+    \FPeval{\@statement@lefttotal}{clip(\@statement@lefttotal+(#1))}%
+    \xdef\@statement@lefttotal{\@statement@lefttotal}%
+  \fi%
+  \formatnumber{#1}%
+}
+
+% Format a number in the right part of the table
+\def\formatrnumber#1{%
+  \def\@temp{#1}%
+  \unless\ifx\@temp\empty%
+    \FPeval{\@statement@righttotal}{clip(\@statement@righttotal+(#1))}%
+    \xdef\@statement@righttotal{\@statement@righttotal}%
+  \fi%
+  \formatnumber{#1}%
+}
+
+% Format a number
+\def\formatnumber#1{%
+  \IfBeginWith{#1}{-}{\color{red!60}\StrBehind{#1}{-}[\temp](\numprint{\temp}\rlap{)}}{\numprint{#1}}%
+}
+
+% Account column
+\newcolumntype{A}{>{\footnotesize\color{black!50}}c}
+% Left amount column
+\newcolumntype{L}{>{\collectcell\formatlnumber}r<{\endcollectcell}}
+% Right amount column
+\newcolumntype{R}{>{\collectcell\formatrnumber}r<{\endcollectcell}}
+% Total column
+\newcolumntype{M}{>{\color{white}\collectcell\formatnumber}r<{\endcollectcell}}
+
+\newif\if@statement@firstline
+
+% First section header helper
+\def\@s@f@head#1{\bf#1 & \tiny Compte & \multicolumn{1}{c|}{\footnotesize Montant}}
+
+% Left section header
+\def\sheadleft#1{%
+  \if@statement@firstline%
+    \@s@f@head{#1}%
+  \else%
+    \multicolumn{3}{|l|}{\bf#1}%
+  \fi%
+}
+
+% Right section header
+\def\sheadright#1{%
+  \if@statement@firstline%
+    \global\@statement@firstlinefalse%
+    \@s@f@head{#1}%
+  \else%
+    \multicolumn{3}{l|}{\bf#1}%
+  \fi%
+}
+
+% Left-skip splitter
+\def\sslline{\cline{4-6}}
+% Right-skip splitter
+\def\ssrline{\cline{1-3}}
+
+% Skip the left columns
+\def\sskipleft{\multicolumn{3}{|l|}{}}
+% Skip the right columns
+\def\sskipright{\multicolumn{3}{l}{}}
+% Make a vertical space in the table
+\def\sspace{\multicolumn{6}{l}{}\\[-3.5mm]}
+% End the current row
+\def\endhere{\sskipright\\\ssrline}
+% End the current row and split with a full line
+\def\endherewithfullline{\sskipright \\\hline}
+
+% Fetch a PCG account
+\def\pcg#1{\csname pcg#1\endcsname & #1}
+
+% Remaining balance
+\def\sbalance#1{%
+  \sspace\hline%
+  \multicolumn{2}{|l|}{%
+    \bf Solde créditeur%
+    \IfBeginWith{#1}{-}{%
+      \gdef\@statement@balance@left{0}%
+      \gdef\@statement@balance@right{\@gobble#1}%
+    }{%
+      \gdef\@statement@balance@left{#1}%
+      \gdef\@statement@balance@right{0}}%
+    } &%
+  \@statement@balance@left &%
+  \multicolumn{2}{l|}{\bf Solde débiteur} &%
+  \@statement@balance@right\\\hline\hline%
+}
+
+% Total balance
+\def\stotal#1#2{%
+  \rowcolor{ResElMarine}%
+  \multicolumn{2}{|c|}{\color{white}\sc Total charges} &%
+  \multicolumn{1}{M}{#1} &%
+  \multicolumn{2}{c|}{\color{white}\sc Total produits} &%
+  \multicolumn{1}{M}{#2}\\\hline%
+}
+
+% Statement environment
+\newenvironment{statement}{%
+  \@statement@firstlinetrue%
+  \xdef\@statement@lefttotal{0}%
+  \xdef\@statement@righttotal{0}%
+  \begin{table}%
+    \setlength\extrarowheight{2pt}%
+    \begin{adjustbox}{width=\columnwidth,center}%
+      \begin{tabular}{|l|A|L|l|A|R|}\hline%
+        \rowcolor{ResElMarine}%
+        \multicolumn{3}{|c}{\color{white}\bf Charges} &%
+        \multicolumn{3}{|c|}{\color{white}\bf Produits}\\\hline\hline%
+}{%
+        \stotal{\@statement@lefttotal}{\@statement@righttotal}%
+      \end{tabular}%
+    \end{adjustbox}%
+  \end{table}%
+}
