@@ -24,7 +24,6 @@
 
 % Requirements
 \RequirePackage{calc}        % calculate lengths
-\RequirePackage{eurosym}     % euro symbol
 \RequirePackage{fp}          % floating point operations
 \RequirePackage{multirow}    % multi-row cells
 \RequirePackage{numprint}    % decimal numbers printer
