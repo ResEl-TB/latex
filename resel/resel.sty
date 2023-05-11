@@ -26,6 +26,7 @@
 \RequirePackage[T1]{fontenc}
 \RequirePackage[french]{babel} % default language
 \RequirePackage{eurosym} % euro symbol
+\RequirePackage[hidelinks]{hyperref} % for links
 %%%---
 
 
@@ -79,4 +80,7 @@
 
 % Emulate a list item
 \def\litem{\hspace{4mm}--\hspace{2mm}}
+
+% E-mail href
+\def\mailto#1{\href{mailto:#1}{\tt#1}}
 %%%---
